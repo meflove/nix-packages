@@ -1,0 +1,63 @@
+---
+name: Flake Update Action
+run-name: nfu
+permissions:
+  contents: write
+  pull-requests: write
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 * * *  # Run everyday
+jobs:
+  locker:
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
+      checks: write
+      statuses: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: repo checkout
+        uses: actions/checkout@main
+      - name: nix install
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: flake check
+        uses: DeterminateSystems/flake-checker-action@main
+      - name: flake update
+        id: update-flake-lock
+        uses: DeterminateSystems/update-flake-lock@main
+        with:
+          pr-title: Update flake.lock Action
+          pr-labels: |
+            CI/CD
+            automated
+          git-author-name: John Nix
+          git-author-email: github-actions[bot]@users.noreply.github.com
+          git-committer-name: John Nix
+          git-committer-email: github-actions[bot]@users.noreply.github.com
+          pr-assignees: meflove
+          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+      - name: Nix binary cache
+        uses: nix-community/cache-nix-action@main
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock')
+            }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          gc-max-store-size-linux: 1073741824
+          purge: true
+          purge-prefixes: nix-${{ runner.os }}-
+          purge-created: 0
+          purge-primary-key: never
+      - name: Fix hash mismatches
+        run: |
+          determinate-nixd fix hashes --auto-apply
+      - name: Enable auto-merge
+        if: steps.update-flake-lock.outputs.pull-request-operation == 'created' ||
+          steps.update-flake-lock.outputs.pull-request-operation == 'updated'
+        uses: peter-evans/enable-pull-request-automerge@main
+        with:
+          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          pull-request-number: ${{ steps.update-flake-lock.outputs.pull-request-number }}
+          merge-method: merge
