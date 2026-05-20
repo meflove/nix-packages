@@ -99,7 +99,11 @@
         inputs.treefmt-nix.flakeModule
       ];
 
-      perSystem = {system, ...}: let
+      perSystem = {
+        system,
+        self',
+        ...
+      }: let
         pkgs = import inputs.nixpkgs {
           inherit system;
           config.allowUnfree = true;
@@ -109,6 +113,7 @@
 
         pkgsDirectory = ./packages;
         pkgsNameSeparator = ".";
+        packages.default = self'.legacyPackages.all-packages;
 
         treefmt = {
           programs = {
