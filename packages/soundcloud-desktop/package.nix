@@ -4,6 +4,7 @@
   stdenv,
   rustPlatform,
   fetchPnpmDeps,
+  makeDesktopItem,
   rev ? inputs.soundcloud-desktop.shortRev or inputs.soundcloud-desktop.dirtyShortRev or "dirty",
   # nativeBuildInputs
   cargo-tauri,
@@ -28,26 +29,28 @@
   pulseaudioFull,
 }: let
   inherit (inputs) soundcloud-desktop;
+
   pname = "soundcloud-desktop";
   packageJson = builtins.fromJSON (builtins.readFile "${soundcloud-desktop.outPath}/desktop/package.json");
   version = "${packageJson.version}-${rev}";
+  src = lib.cleanSource soundcloud-desktop;
 in
+  # naersk'.buildPackage (finalAttrs: {
   rustPlatform.buildRustPackage (finalAttrs: {
-    inherit pname version;
-
-    src = lib.cleanSource soundcloud-desktop;
+    inherit pname version src;
 
     cargoRoot = "desktop/src-tauri";
-    cargoHash = "sha256-oBaVLi1CmW8QO3+D6D4PHsRSm/LCKGcDZEhKskbjPBg=";
+    cargoHash = "sha256-aMIea38qFsBeacjJ16woSt3FBLyZ3Dw4MlwuwT8J9TM=";
 
     buildAndTestSubdir = finalAttrs.cargoRoot;
+
     doCheck = false;
 
     pnpmDeps = fetchPnpmDeps {
-      inherit (finalAttrs) pname version src;
+      inherit pname version src;
       pnpm = pnpm_10;
       fetcherVersion = 3;
-      sourceRoot = "${finalAttrs.src.name}/desktop";
+      sourceRoot = "${src.name}/desktop";
       hash = "sha256-x4s1oTaFgfjgFbalR5EMM+PukbJKRFY7aE8MO16D3PU=";
     };
 
@@ -98,5 +101,17 @@ in
         --prefix PATH : ${lib.makeBinPath [pulseaudioFull]} \
     '';
 
-    meta.mainProgram = finalAttrs.pname;
+    desktopItems = [
+      (makeDesktopItem {
+        name = "SoundCloud Desktop";
+        desktopName = "SoundCloud Desktop";
+        exec = pname;
+        icon = "io.github.zxcloli666.SoundcloudDesktop";
+        terminal = false;
+        type = "Application";
+        categories = ["AudioVideo" "Music"];
+        keywords = ["soundcloud" "music" "player"];
+      })
+    ];
+    meta.mainProgram = pname;
   })

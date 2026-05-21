@@ -17,6 +17,8 @@
     else "${builtins.elemAt versionMatch 0}-${rev}";
 
   pname = "clipse";
+  src = lib.cleanSource clipse;
+
   tags =
     if stdenv.hostPlatform.isDarwin
     then ["darwin"]
@@ -38,11 +40,10 @@ in
   ) "Exactly one of enableWayland, enableX11 must be true";
     buildGoModule {
       pname = packageName;
-      inherit version;
+      inherit version src;
 
-      src = lib.cleanSource clipse;
-
-      vendorHash = "sha256-aMIea38qFsBeacjJ16woSt3FBLyZ3Dw4MlwuwT8J9TM=";
+      goSum = "${src.outPath}/go.sum";
+      vendorHash = "sha256-YQE41GdZMo2+KRSEpoJgtBV1YowNQU5fm8AdbeXq6Gw=";
 
       inherit tags;
 
