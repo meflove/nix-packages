@@ -35,7 +35,6 @@
   version = "${packageJson.version}-${rev}";
   src = lib.cleanSource soundcloud-desktop;
 in
-  # naersk'.buildPackage (finalAttrs: {
   rustPlatform.buildRustPackage (finalAttrs: {
     inherit pname version src;
 
