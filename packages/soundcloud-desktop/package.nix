@@ -50,7 +50,7 @@ in
       pnpm = pnpm_10;
       fetcherVersion = 3;
       sourceRoot = "${src.name}/desktop";
-      hash = "sha256-x4s1oTaFgfjgFbalR5EMM+PukbJKRFY7aE8MO16D3PU=";
+      hash = "sha256-07AXmYnBMqHTCKfo6vMFl13LK1KTYl9XV2fEyKLZCE4=";
     };
 
     pnpmRoot = "desktop";
