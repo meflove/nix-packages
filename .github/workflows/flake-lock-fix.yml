@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: [Flake.lock update]
+    types: [completed]
+    branches: [main]
 permissions:
   id-token: write
   contents: read
@@ -29,7 +33,7 @@ jobs:
       - name: Fix hash mismatches
         if: steps.build.outcome == 'failure'
         run: |-
-          determinate-nixd fix hashes --auto-apply
+          determinate-nixd fix hashes --auto-apply .
           if ! git diff --quiet; then
             git config user.name "John Nix"
             git config user.email "github-actions[bot]@users.noreply.github.com"
