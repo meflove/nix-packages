@@ -22,7 +22,7 @@
 in
   rustPlatform.buildRustPackage (_finalAttrs: {
     pname = "pipewire-soundpad";
-    version = "${cargoToml.package.version}-${rev}";
+    version = "${cargoToml.workspace.package.version}-${rev}";
 
     src = lib.cleanSource pipewire-soundpad;
 
@@ -42,7 +42,7 @@ in
       }"
     '';
 
-    cargoHash = "sha256-pZSEnwfjGlqX2L0uBguXFIw3FWJGESK7nZ5YL+5N7DU=";
+    cargoHash = "sha256-IWAr33Bt+Wq4NhTQl2AADAO2IWeC3oj1lH/3XB7EUnA=";
 
     doCheck = false;
 
