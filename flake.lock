@@ -62,11 +62,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780457665,
-        "narHash": "sha256-xbW7xg6XyZLR8SbrF6CRUcsRsCnW0fgDZrKKMzY7mDo=",
+        "lastModified": 1780544328,
+        "narHash": "sha256-JJemQk2v9iBdp46L++JIwcnPHu9lFFSRkyZEj/N2JLs=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "230bdba103b3d1d8d185c5b3e82e0f74258873af",
+        "rev": "973945c34da5618cceb15e3f107840a1ada665df",
         "type": "github"
       },
       "original": {
@@ -78,11 +78,11 @@
     "pipewire-soundpad": {
       "flake": false,
       "locked": {
-        "lastModified": 1780433214,
-        "narHash": "sha256-yMXPRUj0P/F44bXfTzQQZ5Rw1jn5oPScY+cj/Bsz7hU=",
+        "lastModified": 1780515333,
+        "narHash": "sha256-62t8YBtmzEwCV25EfDL6guzUezJfECNxQVyfcYNS98k=",
         "owner": "arabianq",
         "repo": "pipewire-soundpad",
-        "rev": "3d4dbbe866e76c172f7b07f0ca0ad9901b5220d3",
+        "rev": "3576c634fdb95f1beeb32d73ad065b694b79426a",
         "type": "github"
       },
       "original": {
