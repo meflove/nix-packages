@@ -62,11 +62,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780629672,
-        "narHash": "sha256-oHXwYVLUK4cuNNdOAYfLpUBtEf3eh2o1hhI9BNPUYJw=",
+        "lastModified": 1780711662,
+        "narHash": "sha256-hfmsRcUthIpzlRAr8aXsS6mmZFpHpV0PRBUee0VFQVs=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "0e4b8cee76d21f5866c5d07df1d47b963ed2ad3f",
+        "rev": "488609fdfa866eef7d84601b8a6d905539b5d624",
         "type": "github"
       },
       "original": {
@@ -78,11 +78,11 @@
     "pipewire-soundpad": {
       "flake": false,
       "locked": {
-        "lastModified": 1780595496,
-        "narHash": "sha256-kVMKcAuhcWQ/vCp/fjrbP6RnVcQekkttLTQQ2sQ/sEY=",
+        "lastModified": 1780692751,
+        "narHash": "sha256-GAWDA51Unf/BFO0tqm617UMW912GAJZUL0sDDXDxCr4=",
         "owner": "arabianq",
         "repo": "pipewire-soundpad",
-        "rev": "809b1a84908206b34c773eec85a27fbab645dd6c",
+        "rev": "838fc1ce29c210f763ca0b4392d74a6c6e334f04",
         "type": "github"
       },
       "original": {
@@ -141,11 +141,11 @@
     "soundcloud-desktop": {
       "flake": false,
       "locked": {
-        "lastModified": 1780403585,
-        "narHash": "sha256-Lb8vPfTOEa8f6X1Lvf7Ita1WoJipmw4hPWTHh8XCwE8=",
+        "lastModified": 1780689340,
+        "narHash": "sha256-x4DpixN/WB5KzcnA3251NW3duqoQpVtdMNBesGKRjD4=",
         "owner": "zxcloli666",
         "repo": "SoundCloud-Desktop",
-        "rev": "974b44aa3d96de099f5949946c5efc0c890e686d",
+        "rev": "9513e2093d243addff1fcf2a26c2d8664b053de7",
         "type": "github"
       },
       "original": {
