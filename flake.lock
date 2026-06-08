@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "clipse": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1774904078,
-        "narHash": "sha256-I9SFOYPehUNtEHqTmZjAd5Uh1qGMSIpostSMjUEr1EY=",
-        "owner": "savedra1",
-        "repo": "clipse",
-        "rev": "d29bba55f7bd81c2ad94361a821f80ad544392ed",
-        "type": "github"
-      },
-      "original": {
-        "owner": "savedra1",
-        "repo": "clipse",
-        "type": "github"
-      }
-    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
@@ -62,32 +46,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1780887317,
-        "narHash": "sha256-9fT4AoTD8gvykkJUp0ZGw3unYwOdZ1AdlNZsD2OkS+w=",
+        "lastModified": 1780959342,
+        "narHash": "sha256-RxFycIBf3OSC6jz6EnZf7hLIIRQiQrHxE8xqlHYRZtI=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "0c42fe7eec841ba83ea8eef705c40bac745efaa8",
+        "rev": "90f03bb23b457a9d949197d564be9180974df719",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "NUR",
-        "type": "github"
-      }
-    },
-    "pipewire-soundpad": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1780692751,
-        "narHash": "sha256-GAWDA51Unf/BFO0tqm617UMW912GAJZUL0sDDXDxCr4=",
-        "owner": "arabianq",
-        "repo": "pipewire-soundpad",
-        "rev": "838fc1ce29c210f763ca0b4392d74a6c6e334f04",
-        "type": "github"
-      },
-      "original": {
-        "owner": "arabianq",
-        "repo": "pipewire-soundpad",
         "type": "github"
       }
     },
@@ -106,52 +74,16 @@
         "type": "github"
       }
     },
-    "purple": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1780755572,
-        "narHash": "sha256-JdHaI/CHRL3rvTEhsyubvB/8qejpmx8RWhhkkwnMuaU=",
-        "owner": "erickochen",
-        "repo": "purple",
-        "rev": "ab87f720622e67eb4b52c3fa16d6cff8ced35dfd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "erickochen",
-        "repo": "purple",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
-        "clipse": "clipse",
         "flake-parts": "flake-parts",
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
-        "pipewire-soundpad": "pipewire-soundpad",
         "pkgs-by-name": "pkgs-by-name",
-        "purple": "purple",
-        "soundcloud-desktop": "soundcloud-desktop",
         "treefmt-nix": "treefmt-nix"
-      }
-    },
-    "soundcloud-desktop": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1780861868,
-        "narHash": "sha256-DPeGzun9afNLX1npm7ZBpD4P7bjOlh/dRoiw+ygH9Ts=",
-        "owner": "zxcloli666",
-        "repo": "SoundCloud-Desktop",
-        "rev": "fc1588cba314267d7ba621cf216d2c05e9e29c52",
-        "type": "github"
-      },
-      "original": {
-        "owner": "zxcloli666",
-        "repo": "SoundCloud-Desktop",
-        "type": "github"
       }
     },
     "treefmt-nix": {

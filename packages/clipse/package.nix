@@ -1,23 +1,28 @@
 {
   lib,
-  inputs,
+  fetchFromGitHub,
   buildGoModule,
   stdenv,
-  rev ? inputs.clipse.shortRev or inputs.clipse.dirtyShortRev or "dirty",
   enableWayland ? true,
   enableX11 ? false,
 }: let
-  inherit (inputs) clipse;
+  src = fetchFromGitHub {
+    owner = "savedra1";
+    repo = "clipse";
+    rev = "d29bba55f7bd81c2ad94361a821f80ad544392ed";
+    hash = "sha256-I9SFOYPehUNtEHqTmZjAd5Uh1qGMSIpostSMjUEr1EY=";
+  };
 
-  rootGo = builtins.readFile "${clipse.outPath}/cmd/root.go";
+  rootGo = builtins.readFile "${src.outPath}/cmd/root.go";
   versionMatch = builtins.match ".*version[[:space:]]+=[[:space:]]+\"v([^\"]+)\".*" rootGo;
   version =
     if versionMatch == null
     then "unknown"
-    else "${builtins.elemAt versionMatch 0}-${rev}";
+    else "${builtins.elemAt versionMatch 0}-${
+      lib.substring 0 7 src.rev
+    }";
 
   pname = "clipse";
-  src = lib.cleanSource clipse;
 
   tags =
     if stdenv.hostPlatform.isDarwin

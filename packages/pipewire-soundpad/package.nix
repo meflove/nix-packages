@@ -1,9 +1,8 @@
 {
   lib,
-  inputs,
+  fetchFromGitHub,
   rustPlatform,
   makeDesktopItem,
-  rev ? inputs.pipewire-soundpad.shortRev or inputs.pipewire-soundpad.dirtyShortRev or "dirty",
   # buildDeps
   pkg-config,
   cmake,
@@ -17,14 +16,20 @@
   libGL,
   libxkbcommon,
 }: let
-  inherit (inputs) pipewire-soundpad;
-  cargoToml = lib.importTOML "${pipewire-soundpad.outPath}/Cargo.toml";
+  src = fetchFromGitHub {
+    owner = "arabianq";
+    repo = "pipewire-soundpad";
+    rev = "838fc1ce29c210f763ca0b4392d74a6c6e334f04";
+    hash = "sha256-GAWDA51Unf/BFO0tqm617UMW912GAJZUL0sDDXDxCr4=";
+  };
+
+  cargoToml = lib.importTOML "${src.outPath}/Cargo.toml";
+  version = "${cargoToml.workspace.package.version}-${lib.substring 0 7 src.rev}";
 in
   rustPlatform.buildRustPackage (_finalAttrs: {
     pname = "pipewire-soundpad";
-    version = "${cargoToml.workspace.package.version}-${rev}";
 
-    src = lib.cleanSource pipewire-soundpad;
+    inherit src version;
 
     strictDeps = true;
 

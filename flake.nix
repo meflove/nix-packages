@@ -52,34 +52,6 @@
       repo = "treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # sources
-    purple = {
-      type = "github";
-      owner = "erickochen";
-      repo = "purple";
-      flake = false;
-    };
-
-    clipse = {
-      type = "github";
-      owner = "savedra1";
-      repo = "clipse";
-      flake = false;
-    };
-    soundcloud-desktop = {
-      type = "github";
-      owner = "zxcloli666";
-      repo = "SoundCloud-Desktop";
-      flake = false;
-    };
-
-    pipewire-soundpad = {
-      type = "github";
-      owner = "arabianq";
-      repo = "pipewire-soundpad";
-      flake = false;
-    };
   };
 
   outputs = inputs:
@@ -113,7 +85,14 @@
 
         pkgsDirectory = ./packages;
         pkgsNameSeparator = ".";
-        packages.default = self'.legacyPackages.all-packages;
+        packages = let
+          updater = pkgs.callPackage ./updater.nix {
+            inherit self';
+          };
+        in {
+          inherit updater;
+          default = updater;
+        };
 
         treefmt = {
           programs = {

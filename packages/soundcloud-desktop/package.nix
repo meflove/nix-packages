@@ -1,11 +1,10 @@
 {
-  inputs,
   lib,
   stdenv,
   rustPlatform,
+  fetchFromGitHub,
   fetchPnpmDeps,
   makeDesktopItem,
-  rev ? inputs.soundcloud-desktop.shortRev or inputs.soundcloud-desktop.dirtyShortRev or "dirty",
   # nativeBuildInputs
   cargo-tauri,
   nodejs,
@@ -28,18 +27,22 @@
   libappindicator,
   pulseaudioFull,
 }: let
-  inherit (inputs) soundcloud-desktop;
-
   pname = "soundcloud-desktop";
-  packageJson = builtins.fromJSON (builtins.readFile "${soundcloud-desktop.outPath}/desktop/package.json");
-  version = "${packageJson.version}-${rev}";
-  src = lib.cleanSource soundcloud-desktop;
+  src = fetchFromGitHub {
+    owner = "zxcloli666";
+    repo = "SoundCloud-Desktop";
+    rev = "ee7c91d1f93487008fcf12f97fc466e3f6e58c94";
+    hash = "sha256-f7MMKrPVcpNfdItEheO2NWuxhNgdferbPp9VXorpbp8=";
+  };
+
+  packageJson = builtins.fromJSON (builtins.readFile "${src.outPath}/desktop/package.json");
+  version = "${packageJson.version}-${lib.substring 0 7 src.rev}";
 in
   rustPlatform.buildRustPackage (finalAttrs: {
     inherit pname version src;
 
     cargoRoot = "desktop/src-tauri";
-    cargoHash = "sha256-QWpQsvF/dr6WyiN45ybG5pOprWhYMRkHzPLSmxbfP3g=";
+    cargoHash = "sha256-e8N8Y+rMqLDSimJFK13gEWHRzvPrAH2NUliNqrSiorc=";
 
     buildAndTestSubdir = finalAttrs.cargoRoot;
 
