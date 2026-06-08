@@ -39,7 +39,7 @@ in
     inherit pname version src;
 
     cargoRoot = "desktop/src-tauri";
-    cargoHash = "sha256-T2j+EkgtGA/qIyMRgokEkSOOzNLR0cCr9UlDTZFA9Zs=";
+    cargoHash = "sha256-QWpQsvF/dr6WyiN45ybG5pOprWhYMRkHzPLSmxbfP3g=";
 
     buildAndTestSubdir = finalAttrs.cargoRoot;
 
