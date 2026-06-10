@@ -9,8 +9,8 @@
   src = fetchFromGitHub {
     owner = "savedra1";
     repo = "clipse";
-    rev = "d29bba55f7bd81c2ad94361a821f80ad544392ed";
-    hash = "sha256-I9SFOYPehUNtEHqTmZjAd5Uh1qGMSIpostSMjUEr1EY=";
+    rev = "dc7370c81fbd62b4c59f85a5c8282e27f4fe10d0";
+    hash = "sha256-BIt5sH+dJGca7dp7unwaPP01VaeIba8hc//GLfzhF14=";
   };
 
   rootGo = builtins.readFile "${src.outPath}/cmd/root.go";
