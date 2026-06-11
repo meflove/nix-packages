@@ -1,5 +1,15 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   cachix.push = "meflove";
+  packages = lib.attrValues {
+    inherit
+      (pkgs)
+      jq
+      ;
+  };
 
   git-hooks = {
     package = pkgs.prek;
