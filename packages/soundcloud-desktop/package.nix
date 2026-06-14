@@ -31,8 +31,8 @@
   src = fetchFromGitHub {
     owner = "zxcloli666";
     repo = "SoundCloud-Desktop";
-    rev = "5b4a7c2d4c5a71688e219f148b64907cb2a6e972";
-    hash = "sha256-2ZQsTRXOU09nhWfLXxfaGF/fGUQIvgXGmmDFA8I1dmA=";
+    rev = "fe6cb5692fb9307576fa1502d2936dd73f32fec1";
+    hash = "sha256-nzxt9YHWoQ+qog6nImONTqkHT1/kFSMsQmHulcAO/BU=";
   };
 
   packageJson = builtins.fromJSON (builtins.readFile "${src.outPath}/desktop/package.json");
@@ -42,7 +42,7 @@ in
     inherit pname version src;
 
     cargoRoot = "desktop/src-tauri";
-    cargoHash = "sha256-U2K+LOi6fhNujtOSjxxluCGRCCKsErtvt/NPROvPg30=";
+    cargoHash = "sha256-gRN2bMUVxbucX3Y6ySlfOY8Z3JY07pnUAo4EkJf2OGs=";
 
     buildAndTestSubdir = finalAttrs.cargoRoot;
 
