@@ -15,6 +15,7 @@
   wayland,
   libGL,
   libxkbcommon,
+  openssl,
 }: let
   src = fetchFromGitHub {
     owner = "arabianq";
@@ -29,12 +30,26 @@ in
   rustPlatform.buildRustPackage (_finalAttrs: {
     pname = "pipewire-soundpad";
 
-    inherit src version;
+    inherit
+      src
+      version
+      ;
 
     strictDeps = true;
 
-    nativeBuildInputs = [pkg-config rustPlatform.bindgenHook cmake makeWrapper];
-    buildInputs = [pipewire dbus libclang alsa-lib];
+    nativeBuildInputs = [
+      pkg-config
+      rustPlatform.bindgenHook
+      cmake
+      makeWrapper
+    ];
+    buildInputs = [
+      pipewire
+      dbus
+      libclang
+      alsa-lib
+      openssl
+    ];
 
     postFixup = ''
       wrapProgram "$out/bin/pwsp-gui" \
