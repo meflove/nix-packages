@@ -20,8 +20,8 @@
   src = fetchFromGitHub {
     owner = "arabianq";
     repo = "pipewire-soundpad";
-    rev = "5c73bc1bea2aec01b08e51d948302877b893c4b9";
-    hash = "sha256-f9yMzMqTIADAq1WFI4gHQHz1ik60hT2c5Fff4cfmJmw=";
+    rev = "41bb035b2cfdb9d7c5257a340aea0036239a5c0e";
+    hash = "sha256-u3FYs9BSzCQufR/INnpFmgvog4yj5uzNKO/XL+J86yI=";
   };
 
   cargoToml = lib.importTOML "${src.outPath}/Cargo.toml";
@@ -62,7 +62,7 @@ in
       }"
     '';
 
-    cargoHash = "sha256-RFqAMfAcGirbSsRCrYYoKVXhnllujQ4jINKC3xX5W0Q=";
+    cargoHash = "sha256-MpqLs5y4swbUtRdQc68wPztUdmEBuds2IzDpNtOD11o=";
 
     doCheck = false;
 
