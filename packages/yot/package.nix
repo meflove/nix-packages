@@ -28,6 +28,21 @@ writeShellApplication {
     KEEP_FILES=false
     VERBOSE=false  # Verbose/debug mode
 
+    # vot-cli is pinned to 1.4.3. v2.x (2.0.0+, July 2026) is incompatible:
+    # it depends on @vot.js/node, which dropped the `VOTWorkerClient` export
+    # (so `bunx vot-cli@latest` crashes with "Export named 'VOTWorkerClient'
+    # not found"), and its CLI was rewritten — `--output` became
+    # `--outdir`/`--out`, and output is JSON/URLs instead of the
+    # `Audio Link (...): "..."` line this script parses. 1.4.3 has no
+    # @vot.js/* dependency at all and matches this script exactly.
+    VOT_CLI_VERSION="1.4.3"
+
+    # Wrapper around the pinned vot-cli so call sites stay short and the
+    # version pin lives in exactly one place.
+    vot_cli() {
+        bunx "vot-cli@''${VOT_CLI_VERSION}" "$@"
+    }
+
     # Create cache directory
     mkdir -p "$CACHE_DIR"
 
@@ -147,12 +162,12 @@ writeShellApplication {
     log_step "Step 1/3: Getting translated audio..."
     log_info "Language: $TRANSLATE_LANG"
 
-    log_debug "Running: bunx vot-cli --reslang=\"$TRANSLATE_LANG\" --output=\"$CACHE_DIR\" \"$YOUTUBE_URL\""
+    log_debug "Running: vot_cli --reslang=\"$TRANSLATE_LANG\" --output=\"$CACHE_DIR\" \"$YOUTUBE_URL\""
 
     if [[ "$VERBOSE" == true ]]; then
-        VOT_OUTPUT=$(bunx vot-cli --reslang="$TRANSLATE_LANG" --output="$CACHE_DIR" "$YOUTUBE_URL" 2>&1 | tee /dev/stderr)
+        VOT_OUTPUT=$(vot_cli --reslang="$TRANSLATE_LANG" --output="$CACHE_DIR" "$YOUTUBE_URL" 2>&1 | tee /dev/stderr)
     else
-        VOT_OUTPUT=$(bunx vot-cli --reslang="$TRANSLATE_LANG" --output="$CACHE_DIR" "$YOUTUBE_URL" 2>&1)
+        VOT_OUTPUT=$(vot_cli --reslang="$TRANSLATE_LANG" --output="$CACHE_DIR" "$YOUTUBE_URL" 2>&1)
     fi
 
     AUDIO_LINK=$(echo "$VOT_OUTPUT" | grep -oP 'Audio Link.*: "\K[^"]+')
