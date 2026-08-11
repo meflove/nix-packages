@@ -31,8 +31,8 @@
   src = fetchFromGitHub {
     owner = "zxcloli666";
     repo = "SoundCloud-Desktop";
-    rev = "4098f4a8d8229438a295ce2e1b27c7f12746d5ab";
-    hash = "sha256-szpDFPdsKh6DM2gxch9jbfcllpIIJS36rMqvCDB97uk=";
+    rev = "6480ee4ea5335681d2deb3ac5a76a85b831850e8";
+    hash = "sha256-rVzkCpWlAQmTOqOyTH19PKqUl+2mHIin/rho+4wpQ04=";
   };
 
   packageJson = builtins.fromJSON (builtins.readFile "${src.outPath}/desktop/package.json");
