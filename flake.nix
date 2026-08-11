@@ -38,6 +38,12 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
+    import-tree = {
+      type = "github";
+      owner = "vic";
+      repo = "import-tree";
+    };
+
     nur = {
       type = "github";
       owner = "nix-community";
@@ -54,7 +60,9 @@
     };
   };
 
-  outputs = inputs:
+  outputs = inputs: let
+    lib = inputs.nixpkgs.lib;
+  in
     inputs.flake-parts.lib.mkFlake
     {
       inherit
@@ -69,6 +77,25 @@
       imports = [
         inputs.pkgs-by-name.flakeModule
         inputs.treefmt-nix.flakeModule
+        (inputs.import-tree.filter (lib.hasSuffix "default.nix") [
+          ./modules
+        ])
+        ({self, ...}: {
+          flake.overlays.default = _final: prev: {
+            angeldust-pkgs = removeAttrs self.legacyPackages.${prev.stdenv.hostPlatform.system} ["default"];
+          };
+        })
+        ({config, ...}: {
+          options.flake.homeModules = lib.mkOption {
+            type = lib.types.attrsOf lib.types.deferredModule;
+            default = {};
+            description = "Home Manager modules exported by this flake.";
+          };
+
+          config.flake.homeModules.default = {
+            imports = builtins.attrValues (removeAttrs config.flake.homeModules ["default"]);
+          };
+        })
       ];
 
       perSystem = {

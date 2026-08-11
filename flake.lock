@@ -20,6 +20,21 @@
         "type": "github"
       }
     },
+    "import-tree": {
+      "locked": {
+        "lastModified": 1784254960,
+        "narHash": "sha256-iI88R3wHz8wTKQb5orvpc51L/Xr64AJyxid/0MKa/b8=",
+        "owner": "vic",
+        "repo": "import-tree",
+        "rev": "4ebb10ae17d5f1ad366e7aef5b92cb8eecf24f69",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "import-tree",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1786384358,
@@ -46,11 +61,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786500159,
-        "narHash": "sha256-BI6kWXml4lhcjeryamVYG0I/Cum+pqv2RglK+NpbfME=",
+        "lastModified": 1786558646,
+        "narHash": "sha256-iLu97dKQCpJnAla4a+LbYmpHFzEa/7f2IZVNoe2HuQ4=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "11c57f40af6be1d11fcc93af1ab420bd38194404",
+        "rev": "b18b8d80be45605175e7e3c8da76a6c657c6cecd",
         "type": "github"
       },
       "original": {
@@ -77,6 +92,7 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
+        "import-tree": "import-tree",
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
