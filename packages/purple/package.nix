@@ -10,8 +10,8 @@
   src = fetchFromGitHub {
     owner = "erickochen";
     repo = "purple";
-    rev = "90eb3179c3eb53f11c82d9d50ec87fd7d98e2c2f";
-    hash = "sha256-TBT/ZDWyRdublcIhoKQiVLNlA4klV4lo9kRV1i3wTKA=";
+    rev = "963ed1e2a6f0e60ffcf46b49c20122275c9b88a9";
+    hash = "sha256-CPmOSJ7eTfJTKI4XufRRO/JvD5X5jRwz2VzO3xxvwrQ=";
   };
 
   cargoToml = lib.importTOML "${src.outPath}/Cargo.toml";
