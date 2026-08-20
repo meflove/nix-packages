@@ -14,8 +14,8 @@
   src = fetchFromGitHub {
     owner = "erikwb";
     repo = "blueferry";
-    rev = "381244c8c19424290374e650085748cda12b9e89";
-    hash = "sha256-3ewv0mjYMhfG+lNvcmq9OneWV/sSJ0IO7RLslDI+UEc=";
+    rev = "dee0b097764e10d1930004dcf415dc28c71c2588";
+    hash = "sha256-vUxDfxSNQSSTTo4FpLcodHLD7VomFeSFn2GZFfFW3jk=";
   };
 
   pyproject = lib.importTOML "${src.outPath}/pyproject.toml";
