@@ -58,6 +58,39 @@
       repo = "treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    bun2nix = {
+      type = "github";
+      owner = "nix-community";
+      repo = "bun2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    ## opencode plugins
+    oh-my-opencode-slim = {
+      type = "github";
+      owner = "alvinunreal";
+      repo = "oh-my-opencode-slim";
+      flake = false;
+    };
+    opencode-notify = {
+      type = "github";
+      owner = "kdcokenny";
+      repo = "opencode-notify";
+      flake = false;
+    };
+    opencode-mem = {
+      type = "github";
+      owner = "tickernelz";
+      repo = "opencode-mem";
+      flake = false;
+    };
+    opencode-dynamic-context-pruning = {
+      type = "github";
+      owner = "Opencode-DCP";
+      repo = "opencode-dynamic-context-pruning";
+      flake = false;
+    };
   };
 
   outputs = inputs: let
@@ -106,6 +139,9 @@
         pkgs = import inputs.nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          overlays = with inputs; [
+            bun2nix.overlays.default
+          ];
         };
       in {
         _module.args = {inherit pkgs;};
@@ -114,7 +150,7 @@
         pkgsNameSeparator = ".";
         packages = let
           updater = pkgs.callPackage ./updater.nix {
-            inherit self';
+            inherit self' inputs;
           };
         in {
           inherit updater;
