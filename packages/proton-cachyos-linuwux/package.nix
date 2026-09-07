@@ -12,7 +12,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   src = fetchzip {
     url = "https://github.com/xshaduwulfx/proton-linuwux/releases/download/proton-cachyos-${finalAttrs.version}/proton-cachyos-${finalAttrs.version}.tar.gz";
-    hash = "sha256-gRXm+Lxq8tHlh/pThDiRBWc9CV4lSDeJBHUs+mnlEnQ=";
+    hash = "sha256-ExXoheCZmhf3uyce9OA8UOhhYpYdM7GeAp25zSynV20=";
   };
 
   dontUnpack = true;
