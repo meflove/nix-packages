@@ -1,10 +1,13 @@
+> [!NOTE]
+> **Moved to [Codeberg](https://codeberg.org/angeldust/nix-packages)** — GitHub now serves as a mirror.
+
 # angeldust nix-packages
 
 A personal [Nix flake](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix3-flake.html) of packages and Home Manager modules, built on [flake-parts](https://flake.parts) and [pkgs-by-name](https://github.com/drupol/pkgs-by-name-for-flake-parts), tracking `nixos-unstable`.
 
 - **Systems:** `x86_64-linux`
 - **Outputs:** `legacyPackages` (the package set), `overlays.default` (exposes it as `pkgs.angeldust-pkgs`), `homeModules`
-- **Mirrors:** [GitHub](https://github.com/meflove/nix-packages) · [Codeberg](https://codeberg.org/angeldust/nix-packages) · [Tangled](https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz)
+- **Home:** [Codeberg](https://codeberg.org/angeldust/nix-packages) · **Mirrors:** [GitHub](https://github.com/meflove/nix-packages) · [Tangled](https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz)
 
 ## Packages
 

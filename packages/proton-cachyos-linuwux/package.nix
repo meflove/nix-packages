@@ -27,9 +27,10 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   installPhase = ''
     runHook preInstall
 
-    # Make it impossible to add to an environment. You should use the appropriate NixOS option.
-    # Also leave some breadcrumbs in the file.
-    echo "${finalAttrs.pname} should not be installed into environments. Please use programs.steam.extraCompatPackages instead." > $out
+    mkdir -p $out
+    ln -s $src/* $out
+    rm $out/compatibilitytool.vdf
+    cp $src/compatibilitytool.vdf $out
 
     mkdir $steamcompattool
     ln -s $src/* $steamcompattool
@@ -40,6 +41,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   '';
 
   preFixup = ''
+    substituteInPlace "$out/compatibilitytool.vdf" \
+      --replace-fail "proton-cachyos-${finalAttrs.version}" "${steamDisplayName}"
     substituteInPlace "$steamcompattool/compatibilitytool.vdf" \
       --replace-fail "proton-cachyos-${finalAttrs.version}" "${steamDisplayName}"
   '';

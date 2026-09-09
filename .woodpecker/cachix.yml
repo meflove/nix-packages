@@ -1,0 +1,27 @@
+---
+when:
+  - event: push
+    branch: main
+  - event: manual
+    branch: main
+steps:
+  - name: build and push
+    image: nixos/nix
+    environment:
+      CACHIX_AUTH_TOKEN:
+        from_secret: cachix_auth_token
+      GH_TOKEN:
+        from_secret: gh_token
+    commands:
+      - |
+        export NIX_CONFIG="experimental-features = nix-command flakes
+        access-tokens = github.com=$GH_TOKEN"
+      - nix profile add nixpkgs#cachix
+      - cachix authtoken "$CACHIX_AUTH_TOKEN"
+      - cachix use meflove
+      - nix profile add nixpkgs#jq
+      - |-
+        for pkg in $(nix eval .#packages.x86_64-linux --apply 'pkgs: builtins.attrNames pkgs' --json | jq -r '.[] | select(. != "soundcloud-desktop")' | tr -d '[]"'); do
+          echo "building and pushing $pkg"
+          nix build -L --no-link --print-out-paths ".#legacyPackages.x86_64-linux.$pkg" | cachix push meflove || echo "WARN: failed $pkg, skipping"
+        done
