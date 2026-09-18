@@ -105,11 +105,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789602316,
-        "narHash": "sha256-aBmtInBlyMmVWFYWqiR/RY/4YMgmelUbV8CzZhAn3nQ=",
+        "lastModified": 1789688564,
+        "narHash": "sha256-vibEIDn48fb28YZDmATKPnmGNB1Rub8j53eQZrzmVp8=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "e366c210f736b855b82740e51a172c31b196122a",
+        "rev": "7bbde0285dafb8154b1a8449d8f7f8754831a792",
         "type": "github"
       },
       "original": {
@@ -121,11 +121,11 @@
     "oh-my-opencode-slim": {
       "flake": false,
       "locked": {
-        "lastModified": 1789581815,
-        "narHash": "sha256-XUddVzcPvJecWN3er5sPxsimq0nVkXcRi5ZAd/LR5ck=",
+        "lastModified": 1789631949,
+        "narHash": "sha256-gnY05pmq/44dNyvCgvidmy7QBCBAEI6WYM7IdMb7gNU=",
         "owner": "alvinunreal",
         "repo": "oh-my-opencode-slim",
-        "rev": "f34d7ae22af0985bec257d72d0b6213f2aed3e48",
+        "rev": "ddb935d3d706f8898e940f70de04294b9ee0518f",
         "type": "github"
       },
       "original": {
@@ -184,11 +184,11 @@
     },
     "pkgs-by-name": {
       "locked": {
-        "lastModified": 1769286518,
-        "narHash": "sha256-F7VlUICvYp2wJKyQqM6d46BNEZCzMQ6dMH9zbmjuybc=",
+        "lastModified": 1789628227,
+        "narHash": "sha256-PC+g00FlwHgA/MyejBAEtQLRnrZLiA/Eo7i0rEkZ7bE=",
         "owner": "drupol",
         "repo": "pkgs-by-name-for-flake-parts",
-        "rev": "7ba1cd4a9a72c9c6c272018a63f090f2c912a171",
+        "rev": "da796090e8b34326a4aaf0c173df514f135b3907",
         "type": "github"
       },
       "original": {
