@@ -98,7 +98,7 @@ All packages are built and pushed daily to [meflove.cachix.org](https://meflove.
 ```nix
 {
   nix.settings.substituters = [ "https://meflove.cachix.org" ];
-  nix.settings.trusted-public-keys = [ "meflove.cachix.org-1:<public-key>" ];
+  nix.settings.trusted-public-keys = [ "meflove.cachix.org-1:daXeLaZBNNJOngNUDEoylRfvtai2uSFOqdg29fN+7N8=" ];
 }
 ```
 
