@@ -132,8 +132,8 @@
       ];
 
       perSystem = {
-        system,
         self',
+        system,
         ...
       }: let
         pkgs = import inputs.nixpkgs {

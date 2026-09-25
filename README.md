@@ -1,5 +1,5 @@
 > [!NOTE]
-> **Moved to [Codeberg](https://codeberg.org/angeldust/nix-packages)** — GitHub now serves as a mirror.
+> **Moved to [tangled](https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz)** — [GitHub](https://github.com/meflove/nix-packages) and [Codeberg](https://codeberg.org/angeldust/nix-packages) now serve as a mirrors.
 
 # angeldust nix-packages
 
@@ -7,14 +7,20 @@ A personal [Nix flake](https://nix.dev/manual/nix/stable/command-ref/new-cli/nix
 
 - **Systems:** `x86_64-linux`
 - **Outputs:** `legacyPackages` (the package set), `overlays.default` (exposes it as `pkgs.angeldust-pkgs`), `homeModules`
-- **Home:** [Codeberg](https://codeberg.org/angeldust/nix-packages) · **Mirrors:** [GitHub](https://github.com/meflove/nix-packages) · [Tangled](https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz)
+- **Home:** [Tangled](https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz) **Mirrors:** [GitHub](https://github.com/meflove/nix-packages) · [Codeberg](https://codeberg.org/angeldust/nix-packages)
 
 ## Packages
 
-Run anything directly, e.g. `nix run github:meflove/nix-packages#purple`, or list them all:
+Run anything directly, e.g.
 
-```console
-$ nix eval github:meflove/nix-packages#legacyPackages.x86_64-linux --apply 'ps: builtins.attrNames ps'
+```bash
+nix run git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#purple
+```
+
+or list them all:
+
+```bash
+$ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86_64-linux --apply 'ps: builtins.attrNames ps'
 ```
 
 | Attribute                                          | Description                                                                                              |
@@ -60,7 +66,7 @@ Example:
 
 ```nix
 {
-  inputs.angeldust-pkgs.url = "github:meflove/nix-packages";
+  inputs.angeldust-pkgs.url = "git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz";
 
   # in your Home Manager / NixOS config:
   #
@@ -110,14 +116,14 @@ All packages are built and pushed daily to [meflove.cachix.org](https://meflove.
 2. regenerates `bun.nix` lockfiles with [bun2nix](https://github.com/nix-community/bun2nix) for Bun-based packages;
 3. refreshes `npmDepsHash` with `prefetch-npm-deps` for npm-based packages.
 
-It skips packages that are backed by flake inputs (those move with `nix flake update <input>`), local (`version = "local"`) or explicitly excluded ones, and prints a summary at the end. A daily [GitHub Actions workflow](.github/workflows/update-repo.yaml) runs `nix flake update`, `devenv update` and this updater, committing as _“Flake.lock and devenv.lock update”_.
+It skips packages that are backed by flake inputs (those move with `nix flake update <input>`), local (`version = "local"`) or explicitly excluded ones, and prints a summary at the end. A daily [tangled pipelines](./.tangled/workflows/update.yml) runs `nix flake update`, `devenv update` and this updater.
 
 ## Development
 
-The repo is set up with [devenv](https://devenv.sh) ([direnv](https://direnv.sh) hooks included):
+The repo is set up with [devenv](https://devenv.sh):
 
 ```console
-$ devenv shell        # or just allow .envrc
+$ devenv shell        # or just devenv allow
 $ nix fmt             # treefmt: alejandra, deadnix, statix + prettier for *.md
 ```
 

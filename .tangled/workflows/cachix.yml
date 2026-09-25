@@ -1,0 +1,23 @@
+---
+when:
+  - event: [push, manual, pull_request]
+    branch: [main]
+engine: microvm
+image: nixos
+dependencies: [cachix, jq]
+steps:
+  - name: Configure nix
+    command: |
+      export NIX_CONFIG="experimental-features = nix-command flakes
+      access-tokens = github.com=$GH_TOKEN"
+  - name: Configure cachix
+    command: |
+      cachix authtoken "$CACHIX_AUTH_TOKEN"
+      cachix use meflove
+      cachix use nix-community
+  - name: Build and push
+    command: |-
+      for pkg in $(nix eval .#packages.x86_64-linux --apply 'pkgs: builtins.attrNames pkgs' --json | jq -r '.[] | select(. != "soundcloud-desktop")' | tr -d '[]"'); do
+        echo "building and pushing $pkg"
+        nix build -L --no-link --print-out-paths ".#packages.x86_64-linux.$pkg" | cachix push meflove || echo "WARN: failed $pkg, skipping"
+      done
