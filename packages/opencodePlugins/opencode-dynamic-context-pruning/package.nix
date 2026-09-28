@@ -11,7 +11,7 @@ in
 
     inherit src;
 
-    npmDepsHash = "sha256-GMilj6GzaulQ9Akw11+TpRrC0t9oezcDj6wZSOVugS8=";
+    npmDepsHash = "sha256-ucNE3Le/nr85P33X9FDx8WlWbwGgB9H3/VMPuBuuk9Q=";
 
     npmBuild = "npm run build";
 
