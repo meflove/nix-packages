@@ -3,7 +3,7 @@ when:
   - event: [manual]
   - event: schedule
     schedule:
-      - cron: 0 0 * * 1,4
+      - cron: 0 0 * * *
 engine: microvm
 image: nixos
 dependencies: [git, openssh, devenv]

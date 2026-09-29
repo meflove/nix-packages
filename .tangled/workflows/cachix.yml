@@ -19,5 +19,5 @@ steps:
     command: |-
       for pkg in $(nix eval .#packages.x86_64-linux --apply 'pkgs: builtins.attrNames pkgs' --json | jq -r '.[] | select(. != "soundcloud-desktop")' | tr -d '[]"'); do
         echo "building and pushing $pkg"
-        nix build -L --no-link --print-out-paths ".#packages.x86_64-linux.$pkg" | cachix push meflove || echo "WARN: failed $pkg, skipping"
+        nix build -L --no-link --print-out-paths ".#legacyPackages.x86_64-linux.$pkg" | cachix push meflove || echo "WARN: failed $pkg, skipping"
       done

@@ -129,6 +129,12 @@
             imports = builtins.attrValues (removeAttrs config.flake.homeModules ["default"]);
           };
         })
+        # flake-parts defines flake.nixosModules itself; only aggregate default.
+        ({config, ...}: {
+          config.flake.nixosModules.default = {
+            imports = builtins.attrValues (removeAttrs config.flake.nixosModules ["default"]);
+          };
+        })
       ];
 
       perSystem = {
