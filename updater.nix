@@ -1,8 +1,8 @@
 {
-  self',
-  inputs,
-  pkgs,
   lib,
+  pkgs,
+  inputs,
+  self',
 }: let
   excludePackages = [
     (baseNameOf ./.)
@@ -206,10 +206,10 @@ in
 
     for name in ${toString packagesToUpdate}; do
       nix_update_cmd="${lib.getExe quietNixUpdate}"
-      if [[ "$name" != "proton-cachyos-linuwux" ]]; then
+      if [[ "$name" != "proton-linuwux" ]]; then
         cmd="cd $PWD && $nix_update_cmd --flake legacyPackages.${pkgs.stdenv.system}.$name --version=branch"
       else
-        cmd="cd $PWD && $nix_update_cmd --flake legacyPackages.${pkgs.stdenv.system}.$name --version-regex 'proton-cachyos-(.*)'"
+        cmd="cd $PWD && $nix_update_cmd --flake legacyPackages.${pkgs.stdenv.system}.$name"
       fi
 
       COMMANDS+=("$cmd")

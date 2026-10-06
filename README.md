@@ -40,7 +40,7 @@ $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86
 | `opencodePlugins.opencode-notify`                  | Native OS notifications for OpenCode¹                                                                          |
 | `opencodePlugins.opencode-dynamic-context-pruning` | Prunes obsolete tool outputs from conversation context¹                                                        |
 | `pipewire-soundpad`                                | Soundpad for Linux working via PipeWire                                                                        |
-| `proton-cachyos-linuwux`                           | [Proton-Cachyos "LinUwUx" rework](https://github.com/xshaduwulfx/proton-linuwux) build for Steam               |
+| `proton-linuwux`                                   | [Proton-GE "LinUwUx" rework](https://codeberg.org/xshaduwulfx/proton-linuwux) build for Steam                  |
 | `purple`                                           | Open-source terminal SSH manager and SSH config editor                                                         |
 | `soundcloud-desktop`                               | SoundCloud desktop app                                                                                         |
 | `yazi-plugins.cba-preview`                         | Yazi plugin to preview Comic Book Archive                                                                      |

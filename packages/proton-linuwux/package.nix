@@ -1,18 +1,19 @@
 {
   lib,
-  stdenvNoCC,
   fetchzip,
+  stdenvNoCC,
   # Can be overridden to alter the display name in steam
   # This could be useful if multiple versions should be installed together
-  steamDisplayName ? "proton-cachyos-LinUwUx",
+  steamDisplayName ? "proton-LinUwUx",
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
-  pname = "proton-cachyos-LinUwUx";
-  version = "11.0-20260703-slr-LinUwUx-Rework";
+  pname = "proton";
+  version = "GE-Proton11-7-LinUwUx-Rework";
 
   src = fetchzip {
-    url = "https://github.com/xshaduwulfx/proton-linuwux/releases/download/proton-cachyos-${finalAttrs.version}/proton-cachyos-${finalAttrs.version}.tar.gz";
-    hash = "sha256-ExXoheCZmhf3uyce9OA8UOhhYpYdM7GeAp25zSynV20=";
+    url = "https://codeberg.org/xshaduwulfx/proton-linuwux/releases/download/${finalAttrs.version}/${finalAttrs.version}.tar.gz";
+    stripRoot = false;
+    hash = "sha256-AxxK5gpPwrNEEz/EzksHlanF9OpCPxF4DKqU2QDMCAY=";
   };
 
   dontUnpack = true;
@@ -42,9 +43,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   preFixup = ''
     substituteInPlace "$out/compatibilitytool.vdf" \
-      --replace-fail "proton-cachyos-${finalAttrs.version}" "${steamDisplayName}"
+      --replace-fail "${finalAttrs.version}" "${steamDisplayName}"
     substituteInPlace "$steamcompattool/compatibilitytool.vdf" \
-      --replace-fail "proton-cachyos-${finalAttrs.version}" "${steamDisplayName}"
+      --replace-fail "${finalAttrs.version}" "${steamDisplayName}"
   '';
 
   meta = {
@@ -53,7 +54,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
       (This is intended for use in the `programs.steam.extraCompatPackages` option only.)
     '';
-    homepage = "https://github.com/xshaduwulfx/proton-linuwux";
+    homepage = "https://codeberg.org/xshaduwulfx/proton-linuwux";
     license = lib.licenses.mit;
     platforms = ["x86_64-linux"];
     sourceProvenance = [lib.sourceTypes.binaryNativeCode];
