@@ -28,6 +28,7 @@ $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86
 | `ani-cli-ru.api`                                   | `anicli_api` — parse anime from RU websites                                                                    |
 | `ani-cli-ru.client`                                | `anicli_ru` — watch anime from RU sources via mpv                                                              |
 | `ani-cli-ru.uvicorn`                               | Pinned `uvicorn` ASGI server for the above                                                                     |
+| `blanc`                                            | Minimal Chromium-based (Electron) browser with built-in ad/tracker blocking                                    |
 | `blueferry`                                        | iPhone messages, notifications and contacts on Linux over Bluetooth (backend: CLI, TUI and D-Bus daemon)       |
 | `blueferry-gtk`                                    | BlueFerry GTK client (bundles the backend)                                                                     |
 | `blueferry-qt`                                     | BlueFerry Qt client (bundles the backend)                                                                      |
@@ -59,6 +60,7 @@ $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86
 
 | Module                          | What it gives you                                                                                                                           |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `homeModules.blanc`             | `programs.blanc` — installs the browser, applies `commandLineArgs` and can register it as the default browser                               |
 | `homeModules.blueferry`         | `programs.blueferry` — installs the package and a hardened, D-Bus-activated `blueferry` systemd user service                                |
 | `homeModules.pipewire-soundpad` | `programs.pipewire-soundpad` — installs the package and a `pwsp-daemon` systemd user service                                                |
 | `homeModules.opencode-plugins`  | `programs.opencode.nixPlugins.*` — declaratively installs OpenCode plugins into `~/.config/opencode/plugins` and writes their JSON settings |
@@ -73,6 +75,8 @@ Example:
   # in your Home Manager / NixOS config:
   #
   #   imports = [ angeldust-pkgs.homeModules.default ];
+  #
+  #   programs.blanc.enable = true;
   #
   #   programs.blueferry = {
   #     enable = true;
