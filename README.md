@@ -28,6 +28,7 @@ $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86
 | `ani-cli-ru.api`                                   | `anicli_api` — parse anime from RU websites                                                                    |
 | `ani-cli-ru.client`                                | `anicli_ru` — watch anime from RU sources via mpv                                                              |
 | `ani-cli-ru.uvicorn`                               | Pinned `uvicorn` ASGI server for the above                                                                     |
+| `aw-notify-rs`                                     | `aw-notify` — desktop notifications for ActivityWatch: check-ins, category thresholds, productivity scores     |
 | `blanc`                                            | Minimal Chromium-based (Electron) browser with built-in ad/tracker blocking                                    |
 | `blueferry`                                        | iPhone messages, notifications and contacts on Linux over Bluetooth (backend: CLI, TUI and D-Bus daemon)       |
 | `blueferry-gtk`                                    | BlueFerry GTK client (bundles the backend)                                                                     |
