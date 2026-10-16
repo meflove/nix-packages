@@ -28,8 +28,8 @@
   src = fetchFromGitHub {
     owner = "bnfy";
     repo = "blanc";
-    rev = "9ca59e342b5f009bb44e797190dd1a2e4e00b85a";
-    hash = "sha256-fVR2ZSklWDWRkKGdgi9B3aa9Emf6vo9wXt8PpWIsbmU=";
+    rev = "3fa7c7e420c6ae929a5208c0f322e5e8b379048a";
+    hash = "sha256-IsUIhSUjfmv0Zbr2trNq4SSD7SJmryjXYJvz2DJobtw=";
   };
 
   packageJson = builtins.fromJSON (builtins.readFile "${src.outPath}/package.json");
