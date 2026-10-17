@@ -12,6 +12,15 @@ steps:
     command: |
       export NIX_CONFIG="experimental-features = nix-command flakes
       access-tokens = github.com=$GH_TOKEN"
+  - name: Sync with default branch
+    command: |-
+      branch="${TANGLED_REPO_DEFAULT_BRANCH:-main}"
+      if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
+        git fetch --unshallow origin "$branch"
+      else
+        git fetch origin "$branch"
+      fi
+      git reset --hard FETCH_HEAD
   - name: Update flake.lock and devenv.lock
     command: |-
       nix flake update
