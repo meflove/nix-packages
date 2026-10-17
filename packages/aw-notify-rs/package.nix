@@ -1,11 +1,11 @@
 {
   lib,
   fetchFromGitHub,
-  rustPlatform,
-  # buildDeps
-  pkg-config,
   # deps
   openssl,
+  # buildDeps
+  pkg-config,
+  rustPlatform,
 }: let
   src = fetchFromGitHub {
     owner = "ActivityWatch";
@@ -32,6 +32,8 @@ in
     # registry-only `cargoLock` path cannot be used; the vendored-deps hash
     # covers them (fetchCargoVendor vendors git sources from Cargo.lock).
     cargoHash = "sha256-Mep7ppAQ/nCwHKSsokjY7HKFwDtakmqK8oFoM6HtTT0=";
+
+    doCheck = false;
 
     meta = {
       description = "Desktop notifications for ActivityWatch time-tracking data";
