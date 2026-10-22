@@ -41,6 +41,10 @@ $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86
 | `opencodePlugins.opencode-mem`                     | Persistent memory for coding agents via local Turso/libSQL vector search¹                                      |
 | `opencodePlugins.opencode-notify`                  | Native OS notifications for OpenCode¹                                                                          |
 | `opencodePlugins.opencode-dynamic-context-pruning` | Prunes obsolete tool outputs from conversation context¹                                                        |
+| `oo7`                                              | `oo7-cli` — Secret Service client (upstream `0.7.0.beta`)                                                      |
+| `oo7-pam`                                          | PAM module for the oo7 Secret Service (`0.7.0.beta`)                                                           |
+| `oo7-portal`                                       | XDG Desktop Portal for the oo7 Secret Service (`0.7.0.beta`)                                                   |
+| `oo7-server`                                       | `oo7-daemon` — Secret Service D-Bus daemon (`0.7.0.beta`)                                                      |
 | `pipewire-soundpad`                                | Soundpad for Linux working via PipeWire                                                                        |
 | `proton-linuwux`                                   | [Proton-GE "LinUwUx" rework](https://codeberg.org/xshaduwulfx/proton-linuwux) build for Steam                  |
 | `purple`                                           | Open-source terminal SSH manager and SSH config editor                                                         |
