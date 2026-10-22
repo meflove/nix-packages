@@ -20,10 +20,13 @@ in
     pname = "icp-linux";
     inherit src version;
 
-    # Apple's GrandSlam edge returns 503 when X-MMe-Client-Info does not
-    # match the provisioned machine identity; take it from the anisette
-    # server (which provisions with the same value) instead of the const.
-    patches = [./anisette-client-info.patch];
+    # Since ~2026-10-12 Apple only accepts anisette made by Windows/iTunes ADI, presented
+    # with that client's own identity: a Mac claim answers -80045, the plain akd /
+    # iCloud-for-Windows one -27952, and the Mac identity is refused on both setup
+    # endpoints (loginDelegates `status 1`, get_account_settings 401). The patch also handles
+    # the hsc 409 "code already pushed" 2FA shape and retries the flaky edge/setup calls.
+    # See Sank6#15 and SideloaderKit/Anisette.swift in SideStep.
+    patches = [./grandslam-windows-client-info.patch];
 
     pyproject = true;
 

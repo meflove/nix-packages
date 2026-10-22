@@ -1,0 +1,354 @@
+diff -ruN a/icp/auth/grandslam.py b/icp/auth/grandslam.py
+--- a/icp/auth/grandslam.py	2026-10-18 18:50:24.570329685 +0700
++++ b/icp/auth/grandslam.py	2026-10-18 18:55:27.248643602 +0700
+@@ -18,6 +18,14 @@
+     status = r.get("Status", {})
+     au = status.get("au")
+ 
++    # Since 2026-10-12 a sign-in made with anisette-server data answers hsc 409 ("two-factor
++    # required") with no `au` mode at all: Apple has already pushed the code to the account's
++    # trusted devices, so there is nothing to trigger - only a code to validate. Treating it as
++    # a completed sign-in is what makes loginDelegates answer `status 1`.
++    code_already_pushed = au is None and status.get("hsc") == 409
++    if code_already_pushed:
++        au = "trustedDeviceSecondaryAuth"
++
+     if au in ("trustedDeviceSecondaryAuth", "secondaryAuth"):
+         dsid = spd.get("adsid") or spd.get("DsPrsId")
+         idms = spd.get("GsIdmsToken") or spd.get("GsIdMS")
+@@ -25,7 +33,8 @@
+             raise GSAError(f"2FA required but missing dsid/GsIdMS in spd: keys={list(spd)}")
+ 
+         if au == "trustedDeviceSecondaryAuth":
+-            gsa.trigger_trusted_factor(dsid, idms)
++            if not code_already_pushed:
++                gsa.trigger_trusted_factor(dsid, idms)
+             gsa.submit_trusted_factor(twofa("trusted"), dsid, idms)
+         else:
+             gsa.trigger_sms_factor(dsid, idms)
+@@ -34,7 +43,8 @@
+         # Re-authenticate: the device is now trusted, so this should NOT prompt again.
+         r, spd = gsa.authenticate(
+             username, password, "re-auth after 2FA (password already verified)")
+-        if r.get("Status", {}).get("au"):
++        st = r.get("Status", {})
++        if st.get("au") or st.get("hsc") == 409:
+             raise GSAError("still being asked for 2FA after submitting a code")
+ 
+     return spd
+diff -ruN a/icp/auth/gsa.py b/icp/auth/gsa.py
+--- a/icp/auth/gsa.py	2026-10-18 18:50:24.570329685 +0700
++++ b/icp/auth/gsa.py	2026-10-18 18:52:19.877977242 +0700
+@@ -35,6 +35,12 @@
+     pass
+ 
+ 
++class GSAEdgeError(GSAError):
++    """The GrandSlam edge answered with something that is not a plist (an HTML 503 and
++    friends). Worth one retry - Apple intermittently answers this to a second SRP login a few
++    seconds after the first one."""
++
++
+ class GSAClient:
+     def __init__(self, device: Device, anisette: Anisette):
+         self.device = device
+@@ -53,6 +59,9 @@
+             "svct": "iCloud",
+         }
+         cpd.update(identity_headers(self.device, self.anisette))
++        # The anisette server reports the identity it provisioned with (a Mac); GrandSlam wants
++        # the client to be the platform its machine data can actually come from.
++        cpd["X-MMe-Client-Info"] = const.GSA_CLIENT_INFO
+         return cpd
+ 
+     def _request(self, parameters: dict) -> dict:
+@@ -64,13 +73,21 @@
+             "Accept": "*/*",
+             "User-Agent": const.GSA_USER_AGENT,
+             "X-MMe-Client-Info": const.GSA_CLIENT_INFO,
++            # Apple's GSA edge answers 503 to a reused keep-alive connection; never reuse one.
++            "Connection": "close",
+         }
+         resp = requests.post(
+             const.GSA_ENDPOINT, headers=headers, data=plist.dumps(body),
+             verify=False, timeout=10,
+         )
+ 
+-        payload = plist.loads(resp.content)
++        try:
++            payload = plist.loads(resp.content)
++        except Exception as e:  # the edge answers HTML (a 503 page, say) instead of a plist
++            raise GSAEdgeError(
++                f"GSA {operation} got a non-plist response: HTTP {resp.status_code}: "
++                f"{resp.content[:120]!r}"
++            ) from e
+         response = payload.get("Response")
+ 
+         if not isinstance(response, dict) or not resp.ok:
+@@ -128,12 +145,19 @@
+         _check_code(resp, "trusted-device")
+ 
+     def trigger_sms_factor(self, dsid: str, idms_token: str, phone_id: int = 1) -> None:
+-        requests.put(
++        resp = requests.put(
+             "https://gsa.apple.com/auth/verify/phone/",
+             json={"phoneNumber": {"id": phone_id}, "mode": "sms"},
+             headers=self._twofa_headers(dsid, idms_token),
+             verify=False, timeout=10,
+         )
++        # Apple refuses texted codes (HTTP 403) for sign-ins that use anisette-server data.
++        if resp.status_code == 403:
++            raise GSAError(
++                "Apple refused to send an SMS verification code (HTTP 403): texted codes are not "
++                "allowed when the sign-in uses anisette-server data. Sign this Apple ID in on an "
++                "iPhone, iPad or Mac first, so the code can be pushed to that device instead."
++            )
+ 
+     def submit_sms_factor(self, code: str, dsid: str, idms_token: str, phone_id: int = 1) -> None:
+         body = {
+diff -ruN a/icp/auth/icloud.py b/icp/auth/icloud.py
+--- a/icp/auth/icloud.py	2026-10-18 18:50:24.570329685 +0700
++++ b/icp/auth/icloud.py	2026-10-18 18:55:03.820278933 +0700
+@@ -4,6 +4,7 @@
+ import base64
+ import logging
+ import plistlib as plist
++import time
+ 
+ import requests
+ import urllib3
+@@ -21,8 +22,13 @@
+ 
+ # AOSKit/accountsd identity for the iCloud setup endpoints (distinct from the GSA akd UA).
+ ICLOUD_USER_AGENT = "com.apple.iCloudHelper/282 CFNetwork/1408.0.4 Darwin/22.5.0"
+-ICLOUD_CLIENT_INFO = (
+-    "<MacBookPro18,3> <Mac OS X;13.4.1;22F8> "
++
++# Both setup endpoints have to present the Windows identity the PET was minted for: the Mac one
++# answers `status 1` ("Your Apple ID or password was entered incorrectly") on loginDelegates and
++# `401 UNAUTHORIZED` on get_account_settings. Verified by probing both identities against a
++# stored mmeAuthToken.
++LOGIN_DELEGATES_CLIENT_INFO = (
++    "<PC> <Windows;6.2(0,0);9200> "
+     "<com.apple.AOSKit/282 (com.apple.accountsd/113)>"
+ )
+ 
+@@ -31,6 +37,25 @@
+     pass
+ 
+ 
++def _post_retry(url: str, *, attempts: int = 3, **kwargs) -> requests.Response:
++    """POST to an Apple setup endpoint, retrying transient network failures.
++
++    These endpoints intermittently stall the TLS handshake or drop the connection - often on the
++    first (cold) connection and much more often on a filtered line. Both calls below are safe to
++    repeat: they only mint or read tokens.
++    """
++    last: Exception | None = None
++    for attempt in range(1, attempts + 1):
++        try:
++            return requests.post(url, **kwargs)
++        except requests.RequestException as e:
++            last = e
++            logger.warning("%s: %s (attempt %d/%d)", url, e, attempt, attempts)
++            if attempt < attempts:
++                time.sleep(2 * attempt)
++    raise last
++
++
+ def _basic(user: str, secret: str) -> str:
+     return "Basic " + base64.b64encode(f"{user}:{secret}".encode()).decode()
+ 
+@@ -50,13 +75,13 @@
+     headers = {
+         "X-Apple-ADSID": adsid,
+         "User-Agent": ICLOUD_USER_AGENT,
+-        "X-Mme-Client-Info": ICLOUD_CLIENT_INFO,
++        "X-Mme-Client-Info": LOGIN_DELEGATES_CLIENT_INFO,
+         "Accept": "*/*",
+     }
+     headers.update(identity_headers(device, anisette))
+     headers["Authorization"] = _basic(username, pet)  # apple-id:PET (NOT dsid:PET)
+ 
+-    resp = requests.post(url, headers=headers, data=body, verify=False, timeout=20)
++    resp = _post_retry(url, headers=headers, data=body, verify=False, timeout=20)
+     logger.debug("loginDelegates -> HTTP %s (%d bytes)", resp.status_code, len(resp.content))
+     data = plist.loads(resp.content)
+ 
+@@ -84,13 +109,13 @@
+ 
+     headers = {
+         "Authorization": _basic(str(dsid), token),
+-        "X-Mme-Client-Info": ICLOUD_CLIENT_INFO,
++        "X-Mme-Client-Info": LOGIN_DELEGATES_CLIENT_INFO,
+         "User-Agent": ICLOUD_USER_AGENT,
+         "Accept": "*/*",
+     }
+     headers.update(identity_headers(device, anisette))
+ 
+-    resp = requests.post(url, headers=headers, data="", verify=False, timeout=20)
++    resp = _post_retry(url, headers=headers, data="", verify=False, timeout=30)
+     logger.debug("get_account_settings -> HTTP %s (%d bytes)",
+                  resp.status_code, len(resp.content))
+     return resp.status_code, plist.loads(resp.content)
+diff -ruN a/icp/cli/app.py b/icp/cli/app.py
+--- a/icp/cli/app.py	2026-10-18 18:50:24.570623328 +0700
++++ b/icp/cli/app.py	2026-10-18 19:24:04.114675179 +0700
+@@ -13,17 +13,25 @@
+ import uuid
+ from datetime import datetime, timezone
+ 
++import requests
++
+ from . import ui
+ from .. import diag
+ from ..auth import grandslam as auth, icloud, session
+ from ..auth.anisette import Anisette, AnisetteError
+ from ..auth.device import Device
+-from ..auth.gsa import GSAClient, GSAError
++from ..auth.gsa import GSAClient, GSAEdgeError, GSAError
+ from ..auth.session import SessionError
+ from ..totp import generate as totp_generate
+ 
+ ICLOUD_AUTH_TOKEN = "com.apple.gs.icloud.auth"
+ 
++logger = logging.getLogger(__name__)
++
++# Apple's GrandSlam edge intermittently answers an HTML 503 to a second SRP login a few seconds
++# after the first - exactly what the join path does after the login one. One retry clears it.
++_GSA_EDGE_RETRY_DELAY = 5
++
+ 
+ def _utc(ms: int) -> datetime:
+     return datetime.fromtimestamp(ms / 1000, timezone.utc)
+@@ -35,11 +43,23 @@
+     return ui.ask("6-digit code: ")
+ 
+ 
++def _gsa_login(device, anisette, username: str, password: str, twofa) -> tuple[GSAClient, dict]:
++    """SRP login against GrandSlam, retried once if the edge answered a non-plist response."""
++    for attempt in (1, 2):
++        gsa = GSAClient(device, anisette)
++        try:
++            return gsa, auth.authenticate(gsa, username, password, twofa)
++        except GSAEdgeError as e:
++            if attempt == 2:
++                raise
++            logger.warning("%s - retrying in %ds", e, _GSA_EDGE_RETRY_DELAY)
++            time.sleep(_GSA_EDGE_RETRY_DELAY)
++
++
+ def _mint_pet(device, anisette, username: str, password: str) -> str:
+     """Mint a fresh GSA PET (password-equivalent token) for escrowproxy Basic auth. Silent on an
+     already-trusted device (no 2FA re-prompt). Kept fresh per phase because the PET is short-lived."""
+-    gsa = GSAClient(device, anisette)
+-    spd = auth.authenticate(gsa, username, password, _twofa_prompt)
++    _, spd = _gsa_login(device, anisette, username, password, _twofa_prompt)
+     _, pet, _ = auth.extract_pet(spd)
+     return pet
+ 
+@@ -100,8 +120,7 @@
+     """SRP login with the password, then exchange the fresh 5-min PET for a new ~7-day
+     mmeAuthToken; update `record`'s token fields in place. Preserves any already-cached
+     cloudKitUserId (so a re-auth need not re-run ckAppInit). Raises on failure."""
+-    gsa = GSAClient(device, anisette)
+-    spd = auth.authenticate(gsa, username, password, twofa)
++    gsa, spd = _gsa_login(device, anisette, username, password, twofa)
+     dsid, pet, pet_expiry = auth.extract_pet(spd)
+     if debug and log is not None:
+         diag.dump(log, "GSA init response", gsa.last_init_response)
+@@ -212,7 +231,7 @@
+     try:
+         _mint_tokens(record, username, password, device, anisette, log=log, debug=args.debug)
+         mme_ok = True
+-    except (GSAError, AnisetteError) as e:
++    except (GSAError, AnisetteError, requests.RequestException) as e:
+         ui.err(f"sign-in failed: {e}")
+         return 1
+     except icloud.ICloudError as e:
+@@ -224,7 +243,9 @@
+     if mme_ok:
+         try:
+             n_ws = _refresh_webservices(record, device, anisette, log, args.debug)
+-        except (icloud.ICloudError, AnisetteError) as e:
++        except (icloud.ICloudError, AnisetteError, requests.RequestException) as e:
++            # A network failure here must not lose the tokens: they are saved just below, and a
++            # later `icp sync` fetches the service URLs again without another 2FA round.
+             ui.warn(f"could not fetch iCloud service URLs: {e}")
+ 
+     session.save(record)
+@@ -322,7 +343,7 @@
+         aliases = HmeClient(base, sess.http).list()
+         save_aliases(aliases)
+         return aliases
+-    except (webauth.WebAuthError, HmeError) as e:
++    except (webauth.WebAuthError, HmeError, requests.RequestException) as e:
+         ui.warn(f"Hide My Email unavailable: {e}")
+         return load_aliases()
+ 
+diff -ruN a/icp/const.py b/icp/const.py
+--- a/icp/const.py	2026-10-18 18:50:24.570623328 +0700
++++ b/icp/const.py	2026-10-18 18:51:09.606013570 +0700
+@@ -1,17 +1,23 @@
+-"""Static identity strings used to impersonate a Mac to Apple's GrandSlam service.
++"""Static identity strings used to impersonate Apple's own clients to its services.
+ 
+-These mirror what AltServer / pypush send. Apple tracks some of these, so they are
+-kept stable and Mac-like. The volatile per-request machine data (X-Apple-I-MD*) comes
+-from the anisette server, not from here.
++The volatile per-request machine data (X-Apple-I-MD*) comes from the anisette server, not
++from here. Since ~2026-10-12 GrandSlam answers `ec=-80045` to anisette data generated by the
++Android CoreADI (what anisette-v3-server ships) when the client claims to be a Mac, and
++`ec=-27952` ("Update iCloud for Windows to the latest version to sign in") to the plain
++akd/iCloud-for-Windows identity: only the Windows iTunes identity below is accepted, together
++with the User-Agent the anisette server reports for it.
+ """
+ 
+-# Sent as the GsService2 User-Agent.
+-GSA_USER_AGENT = "akd/1.0 CFNetwork/978.0.7 Darwin/18.7.0"
++# Sent as the GsService2 User-Agent. GrandSlam wants the User-Agent of the client the anisette
++# was generated for; the Windows anisette servers report this one (akd 1.0 / CFNetwork 808.1.4).
++GSA_USER_AGENT = "akd/1.0 CFNetwork/808.1.4"
+ 
+-# AuthKit device description used by GrandSlam and its 2FA endpoints.
++# AuthKit device description used by GrandSlam and its 2FA endpoints. Windows *iTunes*, not
++# macOS and not plain akd: this pair is what the Windows anisette servers advertise, and what
++# SideStep sends on macOS 27 (SideloaderKit/Anisette.swift).
+ GSA_CLIENT_INFO = (
+-    "<MacBookPro18,3> <Mac OS X;13.4.1;22F8> "
+-    "<com.apple.AuthKit/1 (com.apple.akd/1.0)>"
++    "<PC> <Windows;6.2(0,0);9200> "
++    "<com.apple.AuthKit/1 (com.apple.iTunes/12.12.4.1)>"
+ )
+ 
+ # Default anisette server (SideStore ecosystem). Override with ICP_ANISETTE_URL.
+diff -ruN a/icp/escrow/srp.py b/icp/escrow/srp.py
+--- a/icp/escrow/srp.py	2026-10-18 18:50:24.570735155 +0700
++++ b/icp/escrow/srp.py	2026-10-18 18:58:25.680410229 +0700
+@@ -176,8 +176,10 @@
+                         "get_club_cert": "GETCLUB", "enroll": "ENROLL", "delete": "DELETE"}
+ 
+     # escrowproxy wants the sbd UA + a fixed X-Mme-Client-Info that overwrites anisette's.
++    # Windows, like the PET it authenticates with: the Mac identity answers
++    # `401 -3001 Authentication failed`, which then lists the bottles as `None (None)`.
+     ESCROW_USER_AGENT = "com.apple.sbd/638.100.48 com.apple.iCloudHelper/282"
+-    ESCROW_MME_CLIENT_INFO = ("<MacBookPro18,3> <macOS;13.4.1;22F8> "
++    ESCROW_MME_CLIENT_INFO = ("<PC> <Windows;6.2(0,0);9200> "
+                               "<com.apple.AuthKit/1 (com.apple.sbd/638.100.48)>")
+ 
+     def __init__(self, host: str, email: str, pet: str, anisette, *, timeout: int = 30):
+diff -ruN a/icp/transport/cloudkit.py b/icp/transport/cloudkit.py
+--- a/icp/transport/cloudkit.py	2026-10-18 18:50:24.571306799 +0700
++++ b/icp/transport/cloudkit.py	2026-10-18 19:23:56.396395602 +0700
+@@ -25,7 +25,10 @@
+ CKCODE_INVOKE_URL = "https://gateway.icloud.com/ckcoderouter/api/client/code/invoke"
+ CKDATABASE_SYNC_URL = "https://gateway.icloud.com/ckdatabase/api/client/record/sync"
+ CK_APP_INIT_URL = "https://gateway.icloud.com/setup/setup/ck/v1/ckAppInit"
+-CK_MME_CLIENT_INFO = ("<MacBookPro18,3> <Mac OS X;13.4.1;22F8> "
++# CloudKit wants the Windows identity the PET/mmeAuthToken were issued to as well: the Mac one
++# answers `ckAppInit rejected the mmeAuthToken (HTTP 401)`. Verified by probing both against a
++# stored mmeAuthToken (any Windows identity is accepted; the bundle is what differs per op).
++CK_MME_CLIENT_INFO = ("<PC> <Windows;6.2(0,0);9200> "
+                       "<com.apple.cloudkit.CloudKitDaemon/1970 (com.apple.cloudd/1970)>")
+ CUTTLEFISH_CONTAINER = "com.apple.security.keychain"
+ CUTTLEFISH_BUNDLE = "com.apple.security.cuttlefish"   # CKCode (Cuttlefish) requests
