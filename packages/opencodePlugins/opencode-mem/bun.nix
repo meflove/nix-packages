@@ -5,7 +5,10 @@
 # Consume this with `fetchBunDeps` (recommended)
 # or `pkgs.callPackage` if you wish to handle
 # it manually.
-{fetchurl, ...}: {
+{
+  fetchurl,
+  ...
+}: {
   "@ai-sdk/provider@3.0.8" = fetchurl {
     url = "https://registry.npmjs.org/@ai-sdk/provider/-/provider-3.0.8.tgz";
     hash = "sha512-oGMAgGoQdBXbZqNG0Ze56CHjDZ1IDYOwGYxYjO5KLSlz5HiNQ9udIXsPZ61VWaHGZ5XW/jyjmr6t2xz2jGVwbQ==";
@@ -486,37 +489,37 @@
     url = "https://registry.npmjs.org/@npmcli/run-script/-/run-script-10.0.4.tgz";
     hash = "sha512-mGUWr1uMnf0le2TwfOZY4SFxZGXGfm4Jtay/nwAa2FLNAKXUoUwaGwBMNH36UHPtinWfTSJ3nqFQr0091CxVGg==";
   };
-  "@opencode-ai/plugin@1.19.0" = fetchurl {
-    url = "https://registry.npmjs.org/@opencode-ai/plugin/-/plugin-1.19.0.tgz";
-    hash = "sha512-DgtiRekVKeHIQuDD7OndZrQlJ+V8pK/cUuksfB+OPTekmLD8beYT+zX8gMax94s9xhKxEGFhSunjr3V1rkCDEA==";
+  "@opencode-ai/plugin@1.19.2" = fetchurl {
+    url = "https://registry.npmjs.org/@opencode-ai/plugin/-/plugin-1.19.2.tgz";
+    hash = "sha512-aS4WUtjHMuCqAT+SHq9N3O8xx+VEa/wN7PhWL94uhrY2YOcniq6yqDM6BWwmWopOvXCkcDp3nSG+43r1yDcj4w==";
   };
-  "@opencode-ai/sdk@1.19.0" = fetchurl {
-    url = "https://registry.npmjs.org/@opencode-ai/sdk/-/sdk-1.19.0.tgz";
-    hash = "sha512-lDFYTD6qxzq1mfwxF6Kq1DAs6rEwF4xoZ2I3G1sB7hAZ8Yb28JurtSmmcK7ZzZ8Z4qBUYbZimHJ6DM4JFq5amw==";
+  "@opencode-ai/sdk@1.19.2" = fetchurl {
+    url = "https://registry.npmjs.org/@opencode-ai/sdk/-/sdk-1.19.2.tgz";
+    hash = "sha512-1KG4L3iWVgXzaliqilcorRikw3idrGPhLllgiO78VL3o1AY64FgFrr3ftIW0V9koIsj0kyrcWfJ8jGOftRs+ug==";
   };
-  "@opencode/ai@2.0.27" = fetchurl {
-    url = "https://registry.npmjs.org/@opencode/ai/-/ai-2.0.27.tgz";
-    hash = "sha512-RiVtSBo1veffbDnrWo++04XdlcSEzqCAxo1TWDtG/5fZSjWLuiII6OT6Fo/N8ScU/awy9X3omfvun1aq4Lfttw==";
+  "@opencode/ai@2.0.30" = fetchurl {
+    url = "https://registry.npmjs.org/@opencode/ai/-/ai-2.0.30.tgz";
+    hash = "sha512-N+P3qE9qIaBvO9qM+aQPr8T8yjpUGG7QIuHvl59AAIa2FXgGhqfMRq3o6zlFB9B2cvavsHEXKPWuqxIP2MHPXg==";
   };
-  "@opencode/client@2.0.27" = fetchurl {
-    url = "https://registry.npmjs.org/@opencode/client/-/client-2.0.27.tgz";
-    hash = "sha512-RqJodg+QsUgqqJVo+b2PGk2w96l7424nM4BijUSb49Iep9IyUfjDH3zfii4OGfCsmZkNCYK83Mgk9e9EeRA1iQ==";
+  "@opencode/client@2.0.30" = fetchurl {
+    url = "https://registry.npmjs.org/@opencode/client/-/client-2.0.30.tgz";
+    hash = "sha512-KUglC9ak8mhLDC84247i+laGVExvYQKrcMjkOozP9FOyMSHLh/o9fVDb85I6SD6lTM0mtexljXcZi6AbHEfvOQ==";
   };
-  "@opencode/plugin@2.0.27" = fetchurl {
-    url = "https://registry.npmjs.org/@opencode/plugin/-/plugin-2.0.27.tgz";
-    hash = "sha512-TlK5PhHDCIieQEt/zjPlb/5BYbsyQnMSjXWhqL3rYjobKIauUNxdG+UCSCaLyQPhS9ab5zThg9v9tF6xiSyFyw==";
+  "@opencode/plugin@2.0.30" = fetchurl {
+    url = "https://registry.npmjs.org/@opencode/plugin/-/plugin-2.0.30.tgz";
+    hash = "sha512-/69jdd7+RgaiXV5EE+2OepGy+edjbCuOWtdvtfcqZT9LCoZNTkl3a4T6oO2x9PDXznekBpmhahxHCf7zbaN16g==";
   };
-  "@opencode/protocol@2.0.27" = fetchurl {
-    url = "https://registry.npmjs.org/@opencode/protocol/-/protocol-2.0.27.tgz";
-    hash = "sha512-t1j+m5T3TBusHaL58t6gSSQQEFoi+qjVyQ0Eta/4mLeZLJDqSV8BNN6N93GFpV2MJ1iBpGmrH0C02n2Q+nDHfw==";
+  "@opencode/protocol@2.0.30" = fetchurl {
+    url = "https://registry.npmjs.org/@opencode/protocol/-/protocol-2.0.30.tgz";
+    hash = "sha512-2iHVE4z3iDBEW0JCV8K9xlNshO0x5Ers+xxlPrFS+51S+iA4dUdH8gi497PToBdmQHL94FOD8CHcND/QYxDAhA==";
   };
-  "@opencode/schema@2.0.27" = fetchurl {
-    url = "https://registry.npmjs.org/@opencode/schema/-/schema-2.0.27.tgz";
-    hash = "sha512-BxGuiIFo503tW6UYxoBrrgjyczEvPiU3fDn45FxUHtmZgBC8kFE+ldI56ab8kV0Lu5C94ZKOniRb2bWqDu4tAg==";
+  "@opencode/schema@2.0.30" = fetchurl {
+    url = "https://registry.npmjs.org/@opencode/schema/-/schema-2.0.30.tgz";
+    hash = "sha512-Yqe2bJHBZRxp+BsZrGhoqvtn5QQ6HTYu8mZ/VhfsTqbQYiLgr25a2bFB2OVqZXHqBFjyOBDxgpXQYSThw14a5w==";
   };
-  "@opencode/util@2.0.27" = fetchurl {
-    url = "https://registry.npmjs.org/@opencode/util/-/util-2.0.27.tgz";
-    hash = "sha512-2TIEAJsX4UsyV9CHSk+/6jHWrEllgomgD0WQ8Ne+SN4xlmN9cGUvZo/Jgk0XrZZXSmADDOIER2HLcaI0tAr22A==";
+  "@opencode/util@2.0.30" = fetchurl {
+    url = "https://registry.npmjs.org/@opencode/util/-/util-2.0.30.tgz";
+    hash = "sha512-ILp5NtoQ1gV6X3STigjYRIChu8Ia7ApSNtCE52TFP53gYNs9M2D+3+7Mq+uxcfqInEL/fwav5lMayDbOUgvCSQ==";
   };
   "@opentelemetry/api-logs@0.219.0" = fetchurl {
     url = "https://registry.npmjs.org/@opentelemetry/api-logs/-/api-logs-0.219.0.tgz";

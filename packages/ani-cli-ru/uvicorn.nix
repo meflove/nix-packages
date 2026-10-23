@@ -8,8 +8,8 @@
   src = fetchFromGitHub {
     owner = "Kludex";
     repo = "uvicorn";
-    rev = "07bd5d4c94c093960de94d1c96000fb0fa029f13";
-    hash = "sha256-d/MSAeeL9vesOxgfQ51M54K7I9rK3YjmqaRlk12umO8=";
+    rev = "cc6fea5b40ad559f7ca358a24b1a521451232281";
+    hash = "sha256-shZ6CszO5owrk21Xvn9yCffmuwsYuXGnNHromHoOvOY=";
   };
 
   # uvicorn's version is dynamic in pyproject (tool.hatch.version.path)

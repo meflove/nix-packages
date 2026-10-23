@@ -8,7 +8,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "proton";
-  version = "GE-Proton11-7-LinUwUx-Rework";
+  version = "GE-Proton11-8-LinUwUx-Rework";
 
   src = fetchzip {
     url = "https://codeberg.org/xshaduwulfx/proton-linuwux/releases/download/${finalAttrs.version}/${finalAttrs.version}.tar.gz";

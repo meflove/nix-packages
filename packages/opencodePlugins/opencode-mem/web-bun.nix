@@ -5,7 +5,10 @@
 # Consume this with `fetchBunDeps` (recommended)
 # or `pkgs.callPackage` if you wish to handle
 # it manually.
-{fetchurl, ...}: {
+{
+  fetchurl,
+  ...
+}: {
   "@emnapi/core@1.11.1" = fetchurl {
     url = "https://registry.npmjs.org/@emnapi/core/-/core-1.11.1.tgz";
     hash = "sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ==";
@@ -62,9 +65,9 @@
     url = "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz";
     hash = "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==";
   };
-  "@lucide/svelte@1.56.0" = fetchurl {
-    url = "https://registry.npmjs.org/@lucide/svelte/-/svelte-1.56.0.tgz";
-    hash = "sha512-YzbcmneHmPog3wAdXSl7oORgJhFc6klu8rRLMmm5uXwPQ8B0740c7dcNd3oJ72nCPvlbCW1XEmsWa4I0SDIogw==";
+  "@lucide/svelte@1.58.0" = fetchurl {
+    url = "https://registry.npmjs.org/@lucide/svelte/-/svelte-1.58.0.tgz";
+    hash = "sha512-yUKVOUokJews09DTEf23We9/0Lju+XR+1Pcr6rYZBilpf4Uf6T3XRmalUgOsQW0drFfCI53WlIzgokkq2EqwYg==";
   };
   "@napi-rs/wasm-runtime@1.2.0" = fetchurl {
     url = "https://registry.npmjs.org/@napi-rs/wasm-runtime/-/wasm-runtime-1.2.0.tgz";
@@ -514,9 +517,9 @@
     url = "https://registry.npmjs.org/prettier-plugin-svelte/-/prettier-plugin-svelte-4.1.1.tgz";
     hash = "sha512-wXvbXMjSvb4C9ENWTHXyd+ihakKCsJ6rJhLP6/8HFNj4GkZr48jqL9PoKsl2sk7SyCZRTnJ7O2TTowUpOxP/KA==";
   };
-  "prettier@3.9.9" = fetchurl {
-    url = "https://registry.npmjs.org/prettier/-/prettier-3.9.9.tgz";
-    hash = "sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==";
+  "prettier@3.9.10" = fetchurl {
+    url = "https://registry.npmjs.org/prettier/-/prettier-3.9.10.tgz";
+    hash = "sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==";
   };
   "readdirp@4.1.2" = fetchurl {
     url = "https://registry.npmjs.org/readdirp/-/readdirp-4.1.2.tgz";

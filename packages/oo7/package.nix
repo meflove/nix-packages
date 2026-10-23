@@ -20,7 +20,7 @@ in
 
     buildAndTestSubdir = "cli";
 
-    cargoHash = "sha256-X+yNxuVqfOo9uSPx3FZ9RlIg7sQJTK6xNiLgsxENWac=";
+    cargoHash = "sha256-Qq8mNpYMX1ZVU3V79S6TyUp7TNrd4Y/95mAWpJvD8Ok=";
 
     nativeBuildInputs = [pkg-config];
 

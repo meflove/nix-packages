@@ -28,8 +28,8 @@
   src = fetchFromGitHub {
     owner = "bnfy";
     repo = "blanc";
-    rev = "8aaea436534a198c4f02810247dc0a6ac8e3532c";
-    hash = "sha256-rjq49bZQrXZwdyq87wpxs5qKzNIQt2Hsy5DdB+jHufg=";
+    rev = "91a03e944827b5dce184c9d23e37b312ec5e1b1e";
+    hash = "sha256-zqG+SsWXiK3vA+NZ2tretlyavLVkM9gYGH/luiVvTLM=";
   };
 
   packageJson = builtins.fromJSON (builtins.readFile "${src.outPath}/package.json");
@@ -46,7 +46,7 @@ in
     # Upstream builds with Node 22 (.github/workflows/release-windows-linux.yml).
     nodejs = nodejs_22;
 
-    npmDepsHash = "sha256-QLc3ylXXFg7gVa0ER6ThyHXxxVSVIWxTAeJsVlURJkE=";
+    npmDepsHash = "sha256-ocAy+nptumikPZ0/lv31tj7UVYa36ZY3lq4rCQN2WD8=";
 
     # `npm rebuild` would otherwise run the install scripts of dependencies; the
     # only ones in the lock file are the root `postinstall` (reproduced below from
