@@ -25,27 +25,37 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     "steamcompattool"
   ];
 
+  # Upstream ships compatibilitytool.vdf with the internal name of an older
+  # release (11-8 still names 11-7), so its contents are not substituted.
+  # Generate the manifest instead: it is derived from steamDisplayName and
+  # stays stable across version bumps.
+  compatibilityToolVdf = builtins.toFile "compatibilitytool.vdf" ''
+    "compatibilitytools"
+    {
+      "compat_tools"
+      {
+        "${steamDisplayName}" // Internal name of this tool
+        {
+          "install_path" "."
+          "display_name" "${steamDisplayName}"
+          "from_oslist" "windows"
+          "to_oslist" "linux"
+        }
+      }
+    }
+  '';
+
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out
+    mkdir -p $out $steamcompattool
     ln -s $src/* $out
-    rm $out/compatibilitytool.vdf
-    cp $src/compatibilitytool.vdf $out
-
-    mkdir $steamcompattool
     ln -s $src/* $steamcompattool
-    rm $steamcompattool/compatibilitytool.vdf
-    cp $src/compatibilitytool.vdf $steamcompattool
+    rm $out/compatibilitytool.vdf $steamcompattool/compatibilitytool.vdf
+    install -m 0644 ${finalAttrs.compatibilityToolVdf} $out/compatibilitytool.vdf
+    install -m 0644 ${finalAttrs.compatibilityToolVdf} $steamcompattool/compatibilitytool.vdf
 
     runHook postInstall
-  '';
-
-  preFixup = ''
-    substituteInPlace "$out/compatibilitytool.vdf" \
-      --replace-fail "${finalAttrs.version}" "${steamDisplayName}"
-    substituteInPlace "$steamcompattool/compatibilitytool.vdf" \
-      --replace-fail "${finalAttrs.version}" "${steamDisplayName}"
   '';
 
   meta = {
