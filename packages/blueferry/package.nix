@@ -25,6 +25,7 @@
   runtimeDeps = ps:
     with ps; [
       cryptography
+      phonenumbers
       textual
       typer
       dbus-python
