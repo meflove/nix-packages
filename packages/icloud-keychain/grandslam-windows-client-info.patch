@@ -1,6 +1,6 @@
 diff -ruN a/icp/auth/grandslam.py b/icp/auth/grandslam.py
---- a/icp/auth/grandslam.py	2026-10-18 18:50:24.570329685 +0700
-+++ b/icp/auth/grandslam.py	2026-10-18 18:55:27.248643602 +0700
+--- a/icp/auth/grandslam.py	2026-10-25 12:56:30.390409783 +0700
++++ b/icp/auth/grandslam.py	2026-10-25 12:56:30.392894225 +0700
 @@ -18,6 +18,14 @@
      status = r.get("Status", {})
      au = status.get("au")
@@ -37,8 +37,8 @@ diff -ruN a/icp/auth/grandslam.py b/icp/auth/grandslam.py
  
      return spd
 diff -ruN a/icp/auth/gsa.py b/icp/auth/gsa.py
---- a/icp/auth/gsa.py	2026-10-18 18:50:24.570329685 +0700
-+++ b/icp/auth/gsa.py	2026-10-18 18:52:19.877977242 +0700
+--- a/icp/auth/gsa.py	2026-10-25 12:56:30.390409783 +0700
++++ b/icp/auth/gsa.py	2026-10-25 12:56:30.392894225 +0700
 @@ -35,6 +35,12 @@
      pass
  
@@ -107,8 +107,8 @@ diff -ruN a/icp/auth/gsa.py b/icp/auth/gsa.py
      def submit_sms_factor(self, code: str, dsid: str, idms_token: str, phone_id: int = 1) -> None:
          body = {
 diff -ruN a/icp/auth/icloud.py b/icp/auth/icloud.py
---- a/icp/auth/icloud.py	2026-10-18 18:50:24.570329685 +0700
-+++ b/icp/auth/icloud.py	2026-10-18 18:55:03.820278933 +0700
+--- a/icp/auth/icloud.py	2026-10-25 12:56:30.390409783 +0700
++++ b/icp/auth/icloud.py	2026-10-25 12:56:30.392894225 +0700
 @@ -4,6 +4,7 @@
  import base64
  import logging
@@ -192,11 +192,11 @@ diff -ruN a/icp/auth/icloud.py b/icp/auth/icloud.py
                   resp.status_code, len(resp.content))
      return resp.status_code, plist.loads(resp.content)
 diff -ruN a/icp/cli/app.py b/icp/cli/app.py
---- a/icp/cli/app.py	2026-10-18 18:50:24.570623328 +0700
-+++ b/icp/cli/app.py	2026-10-18 19:24:04.114675179 +0700
-@@ -13,17 +13,25 @@
- import uuid
- from datetime import datetime, timezone
+--- a/icp/cli/app.py	2026-10-25 12:56:30.390565376 +0700
++++ b/icp/cli/app.py	2026-10-25 12:56:30.393066939 +0700
+@@ -15,12 +15,14 @@
+ import shutil
+ import subprocess
  
 +import requests
 +
@@ -208,7 +208,9 @@ diff -ruN a/icp/cli/app.py b/icp/cli/app.py
 -from ..auth.gsa import GSAClient, GSAError
 +from ..auth.gsa import GSAClient, GSAEdgeError, GSAError
  from ..auth.session import SessionError
- from ..totp import generate as totp_generate
+ from ..octagon import client as octagon
+ from ..octagon.client import OctagonError
+@@ -29,6 +31,12 @@
  
  ICLOUD_AUTH_TOKEN = "com.apple.gs.icloud.auth"
  
@@ -221,7 +223,7 @@ diff -ruN a/icp/cli/app.py b/icp/cli/app.py
  
  def _utc(ms: int) -> datetime:
      return datetime.fromtimestamp(ms / 1000, timezone.utc)
-@@ -35,11 +43,23 @@
+@@ -40,11 +48,23 @@
      return ui.ask("6-digit code: ")
  
  
@@ -247,7 +249,7 @@ diff -ruN a/icp/cli/app.py b/icp/cli/app.py
      _, pet, _ = auth.extract_pet(spd)
      return pet
  
-@@ -100,8 +120,7 @@
+@@ -105,8 +125,7 @@
      """SRP login with the password, then exchange the fresh 5-min PET for a new ~7-day
      mmeAuthToken; update `record`'s token fields in place. Preserves any already-cached
      cloudKitUserId (so a re-auth need not re-run ckAppInit). Raises on failure."""
@@ -257,7 +259,7 @@ diff -ruN a/icp/cli/app.py b/icp/cli/app.py
      dsid, pet, pet_expiry = auth.extract_pet(spd)
      if debug and log is not None:
          diag.dump(log, "GSA init response", gsa.last_init_response)
-@@ -212,7 +231,7 @@
+@@ -217,7 +236,7 @@
      try:
          _mint_tokens(record, username, password, device, anisette, log=log, debug=args.debug)
          mme_ok = True
@@ -266,7 +268,7 @@ diff -ruN a/icp/cli/app.py b/icp/cli/app.py
          ui.err(f"sign-in failed: {e}")
          return 1
      except icloud.ICloudError as e:
-@@ -224,7 +243,9 @@
+@@ -229,7 +248,9 @@
      if mme_ok:
          try:
              n_ws = _refresh_webservices(record, device, anisette, log, args.debug)
@@ -277,7 +279,7 @@ diff -ruN a/icp/cli/app.py b/icp/cli/app.py
              ui.warn(f"could not fetch iCloud service URLs: {e}")
  
      session.save(record)
-@@ -322,7 +343,7 @@
+@@ -326,7 +347,7 @@
          aliases = HmeClient(base, sess.http).list()
          save_aliases(aliases)
          return aliases
@@ -287,8 +289,8 @@ diff -ruN a/icp/cli/app.py b/icp/cli/app.py
          return load_aliases()
  
 diff -ruN a/icp/const.py b/icp/const.py
---- a/icp/const.py	2026-10-18 18:50:24.570623328 +0700
-+++ b/icp/const.py	2026-10-18 18:51:09.606013570 +0700
+--- a/icp/const.py	2026-10-25 12:56:30.390305100 +0700
++++ b/icp/const.py	2026-10-25 12:56:30.393501763 +0700
 @@ -1,17 +1,23 @@
 -"""Static identity strings used to impersonate a Mac to Apple's GrandSlam service.
 +"""Static identity strings used to impersonate Apple's own clients to its services.
@@ -323,8 +325,8 @@ diff -ruN a/icp/const.py b/icp/const.py
  
  # Default anisette server (SideStore ecosystem). Override with ICP_ANISETTE_URL.
 diff -ruN a/icp/escrow/srp.py b/icp/escrow/srp.py
---- a/icp/escrow/srp.py	2026-10-18 18:50:24.570735155 +0700
-+++ b/icp/escrow/srp.py	2026-10-18 18:58:25.680410229 +0700
+--- a/icp/escrow/srp.py	2026-10-25 12:56:30.390646550 +0700
++++ b/icp/escrow/srp.py	2026-10-25 12:56:30.393140752 +0700
 @@ -176,8 +176,10 @@
                          "get_club_cert": "GETCLUB", "enroll": "ENROLL", "delete": "DELETE"}
  
@@ -338,11 +340,11 @@ diff -ruN a/icp/escrow/srp.py b/icp/escrow/srp.py
  
      def __init__(self, host: str, email: str, pet: str, anisette, *, timeout: int = 30):
 diff -ruN a/icp/transport/cloudkit.py b/icp/transport/cloudkit.py
---- a/icp/transport/cloudkit.py	2026-10-18 18:50:24.571306799 +0700
-+++ b/icp/transport/cloudkit.py	2026-10-18 19:23:56.396395602 +0700
-@@ -25,7 +25,10 @@
- CKCODE_INVOKE_URL = "https://gateway.icloud.com/ckcoderouter/api/client/code/invoke"
+--- a/icp/transport/cloudkit.py	2026-10-25 12:56:30.391003376 +0700
++++ b/icp/transport/cloudkit.py	2026-10-25 12:56:30.393456026 +0700
+@@ -26,7 +26,10 @@
  CKDATABASE_SYNC_URL = "https://gateway.icloud.com/ckdatabase/api/client/record/sync"
+ CKDATABASE_ZONE_SYNC_URL = "https://gateway.icloud.com/ckdatabase/api/client/zone/sync"
  CK_APP_INIT_URL = "https://gateway.icloud.com/setup/setup/ck/v1/ckAppInit"
 -CK_MME_CLIENT_INFO = ("<MacBookPro18,3> <Mac OS X;13.4.1;22F8> "
 +# CloudKit wants the Windows identity the PET/mmeAuthToken were issued to as well: the Mac one
