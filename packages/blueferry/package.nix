@@ -26,6 +26,7 @@
     with ps; [
       cryptography
       phonenumbers
+      regex
       textual
       typer
       dbus-python
