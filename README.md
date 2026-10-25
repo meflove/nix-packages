@@ -49,6 +49,7 @@ $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86
 | `proton-linuwux`                                   | [Proton-GE "LinUwUx" rework](https://codeberg.org/xshaduwulfx/proton-linuwux) build for Steam                  |
 | `purple`                                           | Open-source terminal SSH manager and SSH config editor                                                         |
 | `soundcloud-desktop`                               | SoundCloud desktop app                                                                                         |
+| `tg-mtproto-cli`                                   | Read-only Telegram CLI over MTProto, used with [nix-openclaw](https://github.com/openclaw/nix-openclaw)        |
 | `yazi-plugins.cba-preview`                         | Yazi plugin to preview Comic Book Archive                                                                      |
 | `yazi-plugins.convert`                             | Yazi plugin to convert images                                                                                  |
 | `yazi-plugins.djvu-preview`                        | Yazi plugin for DjVu preview                                                                                   |
