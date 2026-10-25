@@ -6,8 +6,8 @@
   src = fetchFromGitHub {
     owner = "cwelsys";
     repo = "office.yazi";
-    rev = "a5db2324cfd09e4ad48a4ac9ee5ea263557f84d6";
-    hash = "sha256-x8DXFLS+G6BLQRDJW6pfUCVb81b1IX6LNNii2B8V4bM=";
+    rev = "6c26ad951761aaf0012c3d62c7abf5f006ba17db";
+    hash = "sha256-QJpaI7v0XMDXCIe6SmG72EfaGFT/GqQlezBweK9OURY=";
   };
 
   version = "unstable-${lib.substring 0 7 src.rev}";
