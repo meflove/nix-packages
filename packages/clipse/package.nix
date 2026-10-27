@@ -9,8 +9,8 @@
   src = fetchFromGitHub {
     owner = "savedra1";
     repo = "clipse";
-    rev = "dc7370c81fbd62b4c59f85a5c8282e27f4fe10d0";
-    hash = "sha256-BIt5sH+dJGca7dp7unwaPP01VaeIba8hc//GLfzhF14=";
+    rev = "e15d21b79d7a0cdfb0afe96f3d9e7d90f56df8dc";
+    hash = "sha256-tSmK5cDbGeVbQYksDBSpEC9b6oBxCvV4kPB26BIw04w=";
   };
 
   rootGo = builtins.readFile "${src.outPath}/cmd/root.go";
@@ -48,7 +48,7 @@ in
       inherit version src;
 
       goSum = "${src.outPath}/go.sum";
-      vendorHash = "sha256-YQE41GdZMo2+KRSEpoJgtBV1YowNQU5fm8AdbeXq6Gw=";
+      vendorHash = "sha256-uJOgOfJcVHZ58xPjO92t9FD0QzDdd4loqNeqChnYywU=";
 
       inherit tags;
 
