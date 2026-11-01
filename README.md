@@ -23,42 +23,43 @@ or list them all:
 $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86_64-linux --apply 'ps: builtins.attrNames ps'
 ```
 
-| Attribute                                          | Description                                                                                                    |
-| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `ani-cli-ru.api`                                   | `anicli_api` — parse anime from RU websites                                                                    |
-| `ani-cli-ru.client`                                | `anicli_ru` — watch anime from RU sources via mpv                                                              |
-| `ani-cli-ru.uvicorn`                               | Pinned `uvicorn` ASGI server for the above                                                                     |
-| `aw-notify-rs`                                     | `aw-notify` — desktop notifications for ActivityWatch: check-ins, category thresholds, productivity scores     |
-| `blanc`                                            | Minimal Chromium-based (Electron) browser with built-in ad/tracker blocking                                    |
-| `blueferry`                                        | iPhone messages, notifications and contacts on Linux over Bluetooth (backend: CLI, TUI and D-Bus daemon)       |
-| `blueferry-gtk`                                    | BlueFerry GTK client (bundles the backend)                                                                     |
-| `blueferry-qt`                                     | BlueFerry Qt client (bundles the backend)                                                                      |
-| `blueferry-quickshell`                             | BlueFerry Quickshell (Wayland shell) client                                                                    |
-| `clipse`                                           | Clipboard manager TUI for Unix                                                                                 |
-| `icloud-keychain.icp`                              | `icp` — unofficial iCloud Keychain client: CLI, `icp-host` native-messaging launcher and the browser extension |
-| `icloud-keychain.extension`                        | The Apple Passwords browser extension as an unsigned `.xpi` for Firefox-family profiles                        |
-| `opencodePlugins.oh-my-opencode-slim`              | Multi-agent orchestration plugin for OpenCode                                                                  |
-| `opencodePlugins.opencode-mem`                     | Persistent memory for coding agents via local Turso/libSQL vector search¹                                      |
-| `opencodePlugins.opencode-notify`                  | Native OS notifications for OpenCode¹                                                                          |
-| `opencodePlugins.opencode-dynamic-context-pruning` | Prunes obsolete tool outputs from conversation context¹                                                        |
-| `oo7`                                              | `oo7-cli` — Secret Service client (upstream `0.7.0.beta`)                                                      |
-| `oo7-pam`                                          | PAM module for the oo7 Secret Service (`0.7.0.beta`)                                                           |
-| `oo7-portal`                                       | XDG Desktop Portal for the oo7 Secret Service (`0.7.0.beta`)                                                   |
-| `oo7-server`                                       | `oo7-daemon` — Secret Service D-Bus daemon (`0.7.0.beta`)                                                      |
-| `pipewire-soundpad`                                | Soundpad for Linux working via PipeWire                                                                        |
-| `proton-linuwux`                                   | [Proton-GE "LinUwUx" rework](https://codeberg.org/xshaduwulfx/proton-linuwux) build for Steam                  |
-| `purple`                                           | Open-source terminal SSH manager and SSH config editor                                                         |
-| `soundcloud-desktop`                               | SoundCloud desktop app                                                                                         |
-| `tg-mtproto-cli`                                   | Read-only Telegram CLI over MTProto, used with [nix-openclaw](https://github.com/openclaw/nix-openclaw)        |
-| `yazi-plugins.cba-preview`                         | Yazi plugin to preview Comic Book Archive                                                                      |
-| `yazi-plugins.convert`                             | Yazi plugin to convert images                                                                                  |
-| `yazi-plugins.djvu-preview`                        | Yazi plugin for DjVu preview                                                                                   |
-| `yazi-plugins.office`                              | Yazi documents previewer using LibreOffice                                                                     |
-| `yazi-plugins.piper`                               | Pipe any shell command as a cached previewer for Yazi                                                          |
-| `yazi-plugins.torrent-preview`                     | Yazi plugin to preview BitTorrent files                                                                        |
-| `yazi-plugins.wl-clipboard`                        | Simple system clipboard for Yazi on Wayland                                                                    |
-| `yot`                                              | Watch YouTube videos with AI translation in mpv                                                                |
-| `updater`                                          | The bulk package-updater script (also the default package — see [Updating](#updating))                         |
+| Attribute                                          | Description                                                                                                       |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `airpods-helper`                                   | Native AirPods support for Linux: ANC, battery, EQ, ear detection, and a microphone source that keeps A2DP stereo |
+| `ani-cli-ru.api`                                   | `anicli_api` — parse anime from RU websites                                                                       |
+| `ani-cli-ru.client`                                | `anicli_ru` — watch anime from RU sources via mpv                                                                 |
+| `ani-cli-ru.uvicorn`                               | Pinned `uvicorn` ASGI server for the above                                                                        |
+| `aw-notify-rs`                                     | `aw-notify` — desktop notifications for ActivityWatch: check-ins, category thresholds, productivity scores        |
+| `blanc`                                            | Minimal Chromium-based (Electron) browser with built-in ad/tracker blocking                                       |
+| `blueferry`                                        | iPhone messages, notifications and contacts on Linux over Bluetooth (backend: CLI, TUI and D-Bus daemon)          |
+| `blueferry-gtk`                                    | BlueFerry GTK client (bundles the backend)                                                                        |
+| `blueferry-qt`                                     | BlueFerry Qt client (bundles the backend)                                                                         |
+| `blueferry-quickshell`                             | BlueFerry Quickshell (Wayland shell) client                                                                       |
+| `clipse`                                           | Clipboard manager TUI for Unix                                                                                    |
+| `icloud-keychain.icp`                              | `icp` — unofficial iCloud Keychain client: CLI, `icp-host` native-messaging launcher and the browser extension    |
+| `icloud-keychain.extension`                        | The Apple Passwords browser extension as an unsigned `.xpi` for Firefox-family profiles                           |
+| `opencodePlugins.oh-my-opencode-slim`              | Multi-agent orchestration plugin for OpenCode                                                                     |
+| `opencodePlugins.opencode-mem`                     | Persistent memory for coding agents via local Turso/libSQL vector search¹                                         |
+| `opencodePlugins.opencode-notify`                  | Native OS notifications for OpenCode¹                                                                             |
+| `opencodePlugins.opencode-dynamic-context-pruning` | Prunes obsolete tool outputs from conversation context¹                                                           |
+| `oo7`                                              | `oo7-cli` — Secret Service client (upstream `0.7.0.beta`)                                                         |
+| `oo7-pam`                                          | PAM module for the oo7 Secret Service (`0.7.0.beta`)                                                              |
+| `oo7-portal`                                       | XDG Desktop Portal for the oo7 Secret Service (`0.7.0.beta`)                                                      |
+| `oo7-server`                                       | `oo7-daemon` — Secret Service D-Bus daemon (`0.7.0.beta`)                                                         |
+| `pipewire-soundpad`                                | Soundpad for Linux working via PipeWire                                                                           |
+| `proton-linuwux`                                   | [Proton-GE "LinUwUx" rework](https://codeberg.org/xshaduwulfx/proton-linuwux) build for Steam                     |
+| `purple`                                           | Open-source terminal SSH manager and SSH config editor                                                            |
+| `soundcloud-desktop`                               | SoundCloud desktop app                                                                                            |
+| `tg-mtproto-cli`                                   | Read-only Telegram CLI over MTProto, used with [nix-openclaw](https://github.com/openclaw/nix-openclaw)           |
+| `yazi-plugins.cba-preview`                         | Yazi plugin to preview Comic Book Archive                                                                         |
+| `yazi-plugins.convert`                             | Yazi plugin to convert images                                                                                     |
+| `yazi-plugins.djvu-preview`                        | Yazi plugin for DjVu preview                                                                                      |
+| `yazi-plugins.office`                              | Yazi documents previewer using LibreOffice                                                                        |
+| `yazi-plugins.piper`                               | Pipe any shell command as a cached previewer for Yazi                                                             |
+| `yazi-plugins.torrent-preview`                     | Yazi plugin to preview BitTorrent files                                                                           |
+| `yazi-plugins.wl-clipboard`                        | Simple system clipboard for Yazi on Wayland                                                                       |
+| `yot`                                              | Watch YouTube videos with AI translation in mpv                                                                   |
+| `updater`                                          | The bulk package-updater script (also the default package — see [Updating](#updating))                            |
 
 ¹ These plugins still ship the OpenCode **V1** plugin API and do not load on OpenCode V2 (only load-failure warnings, nothing breaks). The Home Manager module options document this in detail.
 
@@ -102,6 +103,7 @@ Example:
 
 | Module                         | What it gives you                                                                                                                                                                              |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `nixosModules.airpods-helper`  | `services.airpods-helper` — `airpods-daemon` user service behind the L2CAP capability wrapper, `airpods-cli`, and an optional initial `config.toml`                                            |
 | `nixosModules.icloud-keychain` | `services.icloud-keychain` — the `icp` CLI, the anisette-v3-server container (oci-containers/docker) that Apple sign-in needs, and native-messaging wiring for enabled Firefox-family browsers |
 | `nixosModules.default`         | All of the above in one import                                                                                                                                                                 |
 
