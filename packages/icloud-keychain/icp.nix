@@ -20,12 +20,13 @@ in
     pname = "icp-linux";
     inherit src version;
 
-    # Since ~2026-10-12 Apple only accepts anisette made by Windows/iTunes ADI, presented
-    # with that client's own identity: a Mac claim answers -80045, the plain akd /
-    # iCloud-for-Windows one -27952, and the Mac identity is refused on both setup
-    # endpoints (loginDelegates `status 1`, get_account_settings 401). The patch also handles
-    # the hsc 409 "code already pushed" 2FA shape and retries the flaky edge/setup calls.
-    # See Sank6#15 and SideloaderKit/Anisette.swift in SideStep.
+    # Since ~2026-10-12 Apple only accepts anisette made by Windows ADI, presented with that
+    # client's own identity (a Mac claim answers -80045). Upstream adopted that in a1342ca
+    # (Sank6#24), so only the robustness part is left here: the GSA edge intermittently answers
+    # an HTML 503 to the second SRP login `icp join` runs seconds after `icp login`, so a
+    # non-plist answer becomes a GSAEdgeError with one retry, the GSA keep-alive connection is
+    # never reused, the iCloud setup POSTs retry transient network failures, and the SMS 403
+    # (texted codes refused for anisette-server sign-ins) is explained. See Sank6#15.
     patches = [./grandslam-windows-client-info.patch];
 
     pyproject = true;
