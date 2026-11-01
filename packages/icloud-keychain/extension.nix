@@ -9,8 +9,8 @@
   src = fetchFromGitHub {
     owner = "Sank6";
     repo = "iCloud-Keychain-for-Linux";
-    rev = "a1342ca61ba28234e274e549487c181aae50588a";
-    hash = "sha256-5DcMjXXGcMObwZBbeqOtXziGpjs1oimXiFdyHaSip5c=";
+    rev = "74964eeef01d71db8daa0fc961306ec194bc98df";
+    hash = "sha256-m8g++GJh5f2MNnhptIEui0d3chpRo/aTTOwevqhIQYg=";
   };
 
   manifest = lib.importJSON "${src.outPath}/extension/manifest.json";
