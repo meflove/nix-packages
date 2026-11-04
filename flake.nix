@@ -65,32 +65,6 @@
       repo = "bun2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    ## opencode plugins
-    oh-my-opencode-slim = {
-      type = "github";
-      owner = "alvinunreal";
-      repo = "oh-my-opencode-slim";
-      flake = false;
-    };
-    opencode-notify = {
-      type = "github";
-      owner = "kdcokenny";
-      repo = "opencode-notify";
-      flake = false;
-    };
-    opencode-mem = {
-      type = "github";
-      owner = "tickernelz";
-      repo = "opencode-mem";
-      flake = false;
-    };
-    opencode-dynamic-context-pruning = {
-      type = "github";
-      owner = "Opencode-DCP";
-      repo = "opencode-dynamic-context-pruning";
-      flake = false;
-    };
   };
 
   outputs = inputs: let

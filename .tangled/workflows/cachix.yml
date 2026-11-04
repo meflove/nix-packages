@@ -5,6 +5,9 @@ when:
 engine: microvm
 image: nixos
 dependencies: [cachix, jq]
+substituters:
+  https://nix-community.cachix.org: nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+  https://meflove.cachix.org: meflove.cachix.org-1:daXeLaZBNNJOngNUDEoylRfvtai2uSFOqdg29fN+7N8=
 steps:
   - name: Configure nix
     command: |
