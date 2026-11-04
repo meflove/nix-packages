@@ -118,70 +118,6 @@
         "type": "github"
       }
     },
-    "oh-my-opencode-slim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793740894,
-        "narHash": "sha256-cG//lI0Rrju6TkwZWWu2JOQWZu4kEaYGaIbPkTpI6qI=",
-        "owner": "alvinunreal",
-        "repo": "oh-my-opencode-slim",
-        "rev": "81538fdf316c2983ecab7ea541fb1299ce15216a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "alvinunreal",
-        "repo": "oh-my-opencode-slim",
-        "type": "github"
-      }
-    },
-    "opencode-dynamic-context-pruning": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1790306239,
-        "narHash": "sha256-gEA9RiQtz0cfLKy9h53st1bd5ea6K02lvo+Ti4R61pQ=",
-        "owner": "Opencode-DCP",
-        "repo": "opencode-dynamic-context-pruning",
-        "rev": "f8232fde1e63c2251687e4d9634bd53ce11568cb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Opencode-DCP",
-        "repo": "opencode-dynamic-context-pruning",
-        "type": "github"
-      }
-    },
-    "opencode-mem": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793743740,
-        "narHash": "sha256-tYPIrXQ7rQ/AAtPqIcWFWdZr+Q9TekNjLTJIbHdOaKU=",
-        "owner": "tickernelz",
-        "repo": "opencode-mem",
-        "rev": "17c4eb7708d460d1afc302f7968e39a08c69dc29",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tickernelz",
-        "repo": "opencode-mem",
-        "type": "github"
-      }
-    },
-    "opencode-notify": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1789530810,
-        "narHash": "sha256-fgWsrp7Bk1O3cTt9KsFNQ6OrjWZcNZsRVxdNPgzsqQE=",
-        "owner": "kdcokenny",
-        "repo": "opencode-notify",
-        "rev": "6f430555495fa788347591c53c6770090a479211",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kdcokenny",
-        "repo": "opencode-notify",
-        "type": "github"
-      }
-    },
     "pkgs-by-name": {
       "locked": {
         "lastModified": 1789628227,
@@ -207,10 +143,6 @@
         ],
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
-        "oh-my-opencode-slim": "oh-my-opencode-slim",
-        "opencode-dynamic-context-pruning": "opencode-dynamic-context-pruning",
-        "opencode-mem": "opencode-mem",
-        "opencode-notify": "opencode-notify",
         "pkgs-by-name": "pkgs-by-name",
         "treefmt-nix": "treefmt-nix_2"
       }

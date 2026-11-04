@@ -1,10 +1,37 @@
 {
   python314Packages,
   fetchFromGitHub,
+  fetchPypi,
   ani-cli-ru,
   lib,
 }: let
-  python = python314Packages;
+  # Upstream caps typer<0.26: 0.26 vendored Click and dropped Click-specific
+  # support, while anicli_ru imports `click.Choice` directly. nixpkgs ships
+  # 0.27.x, so pin the version resolved by upstream's uv.lock.
+  python = python314Packages.overrideScope (_final: prev: {
+    typer = prev.typer.overridePythonAttrs (_old: rec {
+      version = "0.21.1";
+
+      src = fetchPypi {
+        pname = "typer";
+        inherit version;
+        hash = "sha256-6oNWB811I0O2srfOZ2iT5aAyQIImi0jyeqBYvbfSFF0=";
+      };
+
+      # nixpkgs' postPatch rewrites tests of the 0.27.x checkout; tests are
+      # disabled below anyway. Upstream tests target Click 8.3 and pytest<9,
+      # neither of which matches this python set.
+      postPatch = "";
+      doCheck = false;
+
+      dependencies = with prev; [
+        click
+        rich
+        shellingham
+        typing-extensions
+      ];
+    });
+  });
 
   src = fetchFromGitHub {
     owner = "vypivshiy";
