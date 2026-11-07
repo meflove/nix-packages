@@ -10,8 +10,8 @@
   src = fetchFromGitHub {
     owner = "linux-credentials";
     repo = "oo7";
-    rev = "34456a0f5f20d1c34b3eeda0e4cb8292c824f8c5";
-    hash = "sha256-il27U8wNAX6NuAOBUCsIgbAZtmu7aQaBmVm8EoX3s3Q=";
+    rev = "c08174562e3ba041b58d957d94c88ff97dcaab0a";
+    hash = "sha256-nRuTCl+/NxGKcqoKmkhPju7BjEOwGwYrboUb9OTMkSY=";
   };
 in
   rustPlatform.buildRustPackage {
@@ -20,7 +20,7 @@ in
 
     buildAndTestSubdir = "cli";
 
-    cargoHash = "sha256-JuC5bJ4TSCqTcD6F0u76IAaaomF2eyRk3L+2iOxuqX0=";
+    cargoHash = "sha256-hjR3xZSA0957n4l0q2c4+Rs7FjykjYSlWl6wz+UkqvE=";
 
     nativeBuildInputs = [pkg-config];
 
