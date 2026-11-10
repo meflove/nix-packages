@@ -1,61 +1,15 @@
 --- a/icp/auth/gsa.py
 +++ b/icp/auth/gsa.py
-@@ -35,6 +35,12 @@
-     pass
- 
- 
-+class GSAEdgeError(GSAError):
-+    """The GrandSlam edge answered with something that is not a plist (an HTML 503 and
-+    friends). Worth one retry - Apple intermittently answers this to a second SRP login a few
-+    seconds after the first one."""
-+
-+
- class GSAClient:
-     def __init__(self, device: Device, anisette: Anisette):
-         self.device = device
-@@ -53,6 +59,9 @@
-             "svct": "iCloud",
-         }
-         cpd.update(identity_headers(self.device, self.anisette))
-+        # The anisette server reports the identity it provisioned with (a Mac); GrandSlam wants
-+        # the client to be the platform its machine data can actually come from.
-+        cpd["X-MMe-Client-Info"] = const.GSA_CLIENT_INFO
-         return cpd
- 
-     def _request(self, parameters: dict) -> dict:
-@@ -64,13 +73,21 @@
-             "Accept": "*/*",
-             "User-Agent": const.GSA_USER_AGENT,
-             "X-MMe-Client-Info": const.GSA_CLIENT_INFO,
-+            # Apple's GSA edge answers 503 to a reused keep-alive connection; never reuse one.
-+            "Connection": "close",
-         }
-         resp = requests.post(
-             const.GSA_ENDPOINT, headers=headers, data=plist.dumps(body),
-             verify=False, timeout=10,
-         )
- 
--        payload = plist.loads(resp.content)
-+        try:
-+            payload = plist.loads(resp.content)
-+        except Exception as e:  # the edge answers HTML (a 503 page, say) instead of a plist
-+            raise GSAEdgeError(
-+                f"GSA {operation} got a non-plist response: HTTP {resp.status_code}: "
-+                f"{resp.content[:120]!r}"
-+            ) from e
-         response = payload["Response"]
- 
-         if not resp.ok:
-@@ -128,12 +145,19 @@
+@@ -163,12 +163,19 @@
          _check_code(resp, "trusted-device")
- 
+
      def trigger_sms_factor(self, dsid: str, idms_token: str, phone_id: int = 1) -> None:
--        requests.put(
-+        resp = requests.put(
+-        apple_tls.put(
++        resp = apple_tls.put(
              "https://gsa.apple.com/auth/verify/phone/",
              json={"phoneNumber": {"id": phone_id}, "mode": "sms"},
              headers=self._twofa_headers(dsid, idms_token),
-             verify=False, timeout=10,
+             timeout=10,
          )
 +        # Apple refuses texted codes (HTTP 403) for sign-ins that use anisette-server data.
 +        if resp.status_code == 403:
@@ -64,7 +18,7 @@
 +                "allowed when the sign-in uses anisette-server data. Sign this Apple ID in on an "
 +                "iPhone, iPad or Mac first, so the code can be pushed to that device instead."
 +            )
- 
+
      def submit_sms_factor(self, code: str, dsid: str, idms_token: str, phone_id: int = 1) -> None:
          body = {
 --- a/icp/auth/icloud.py
@@ -74,18 +28,18 @@
  import logging
  import plistlib as plist
 +import time
- 
+
  import requests
- import urllib3
-@@ -37,6 +38,25 @@
+
+@@ -31,6 +32,25 @@
      """The mmeAuthToken itself is no longer accepted (HTTP 401) - only a sign-in repairs it."""
- 
- 
+
+
 +def _post_retry(url: str, *, attempts: int = 3, **kwargs) -> requests.Response:
 +    """POST to an Apple setup endpoint, retrying transient network failures.
 +
 +    These endpoints intermittently stall the TLS handshake or drop the connection - often on the
-+    first (cold) connection and much more often on a filtered line. Both calls below are safe to
++    first (cold) connection and much more often on a filtered line. Both callers below are safe to
 +    repeat: they only mint or read tokens.
 +    """
 +    last: Exception | None = None
@@ -102,22 +56,22 @@
 +
  def _basic(user: str, secret: str) -> str:
      return "Basic " + base64.b64encode(f"{user}:{secret}".encode()).decode()
- 
-@@ -62,7 +82,7 @@
+
+@@ -56,7 +76,7 @@
      headers.update(identity_headers(device, anisette))
      headers["Authorization"] = _basic(username, pet)  # apple-id:PET (NOT dsid:PET)
- 
--    resp = requests.post(url, headers=headers, data=body, verify=False, timeout=20)
-+    resp = _post_retry(url, headers=headers, data=body, verify=False, timeout=20)
+
+-    resp = requests.post(url, headers=headers, data=body, timeout=20)
++    resp = _post_retry(url, headers=headers, data=body, timeout=20)
      logger.debug("loginDelegates -> HTTP %s (%d bytes)", resp.status_code, len(resp.content))
      data = plist.loads(resp.content)
- 
-@@ -97,7 +117,7 @@
+
+@@ -91,7 +111,7 @@
      headers.update(identity_headers(device, anisette))
- 
+
      try:
--        resp = requests.post(url, headers=headers, data="", verify=False, timeout=20)
-+        resp = _post_retry(url, headers=headers, data="", verify=False, timeout=30)
+-        resp = requests.post(url, headers=headers, data="", timeout=20)
++        resp = _post_retry(url, headers=headers, data="", timeout=30)
      except requests.RequestException as e:
          raise ICloudError(f"network error talking to account settings: {e}") from e
      logger.debug("get_account_settings -> HTTP %s (%d bytes)",
@@ -126,7 +80,7 @@
 @@ -15,12 +15,14 @@
  import shutil
  import subprocess
- 
+
 +import requests
 +
  from . import ui
@@ -135,35 +89,35 @@
  from ..auth.anisette import Anisette, AnisetteError
  from ..auth.device import Device
 -from ..auth.gsa import GSAClient, GSAError
-+from ..auth.gsa import GSAClient, GSAEdgeError, GSAError
++from ..auth.gsa import GSAClient, GSAError, GSAServiceError
  from ..auth.session import SessionError
  from ..octagon import client as octagon
  from ..octagon.client import OctagonError
 @@ -29,6 +31,12 @@
- 
+
  ICLOUD_AUTH_TOKEN = "com.apple.gs.icloud.auth"
- 
+
 +logger = logging.getLogger(__name__)
 +
 +# Apple's GrandSlam edge intermittently answers an HTML 503 to a second SRP login a few seconds
 +# after the first - exactly what the join path does after the login one. One retry clears it.
 +_GSA_EDGE_RETRY_DELAY = 5
 +
- 
+
  def _utc(ms: int) -> datetime:
      return datetime.fromtimestamp(ms / 1000, timezone.utc)
-@@ -40,11 +48,24 @@
-     return ui.ask("6-digit code: ")
- 
- 
+@@ -46,11 +54,24 @@
+     return ui.ask("6-digit Hide My Email code: ")
+
+
 +def _gsa_login(device, anisette, username: str, password: str, twofa, *,
 +               interactive: bool = True) -> tuple[GSAClient, dict]:
-+    """SRP login against GrandSlam, retried once if the edge answered a non-plist response."""
++    """SRP login against GrandSlam, retried once if the edge answered a non-plist/5xx response."""
 +    for attempt in (1, 2):
 +        gsa = GSAClient(device, anisette)
 +        try:
 +            return gsa, auth.authenticate(gsa, username, password, twofa, interactive=interactive)
-+        except GSAEdgeError as e:
++        except GSAServiceError as e:
 +            if attempt == 2:
 +                raise
 +            logger.warning("%s - retrying in %ds", e, _GSA_EDGE_RETRY_DELAY)
@@ -178,8 +132,8 @@
 +    _, spd = _gsa_login(device, anisette, username, password, _twofa_prompt)
      _, pet, _ = auth.extract_pet(spd)
      return pet
- 
-@@ -105,8 +126,8 @@
+
+@@ -122,8 +143,8 @@
      """SRP login with the password, then exchange the fresh 5-min PET for a new ~7-day
      mmeAuthToken; update `record`'s token fields in place. Preserves any already-cached
      cloudKitUserId (so a re-auth need not re-run ckAppInit). Raises on failure."""
@@ -190,7 +144,7 @@
      dsid, pet, pet_expiry = auth.extract_pet(spd)
      if debug and log is not None:
          diag.dump(log, "GSA init response", gsa.last_init_response)
-@@ -220,7 +241,7 @@
+@@ -238,7 +259,7 @@
      try:
          _mint_tokens(record, username, password, device, anisette, log=log, debug=args.debug)
          mme_ok = True
@@ -199,18 +153,7 @@
          ui.err(f"sign-in failed: {e}")
          return 1
      except icloud.ICloudError as e:
-@@ -232,7 +253,9 @@
-     if mme_ok:
-         try:
-             n_ws = _refresh_webservices(record, device, anisette, log, args.debug)
--        except (icloud.ICloudError, AnisetteError) as e:
-+        except (icloud.ICloudError, AnisetteError, requests.RequestException) as e:
-+            # A network failure here must not lose the tokens: they are saved just below, and a
-+            # later `icp sync` fetches the service URLs again without another 2FA round.
-             ui.warn(f"could not fetch iCloud service URLs: {e}")
- 
-     session.save(record)
-@@ -332,7 +355,7 @@
+@@ -352,7 +373,7 @@
          aliases = HmeClient(base, sess.http).list()
          save_aliases(aliases)
          return aliases
@@ -218,4 +161,3 @@
 +    except (webauth.WebAuthError, HmeError, requests.RequestException) as e:
          ui.warn(f"Hide My Email unavailable: {e}")
          return load_aliases()
- 

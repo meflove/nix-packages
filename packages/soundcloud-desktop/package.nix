@@ -12,6 +12,8 @@
   pnpmConfigHook,
   pkg-config,
   makeWrapper,
+  cmake,
+  git,
   autoconf,
   automake,
   libtool,
@@ -19,6 +21,7 @@
   # buildInputs
   glib-networking,
   openssl,
+  sqlite,
   webkitgtk_4_1,
   alsa-lib,
   libopus,
@@ -61,6 +64,7 @@ in
     nativeBuildInputs =
       [
         cargo-tauri.hook
+        rustPlatform.bindgenHook
 
         nodejs
         pnpmConfigHook
@@ -68,6 +72,9 @@ in
 
         pkg-config
         makeWrapper
+
+        cmake
+        git
 
         autoconf
         automake
@@ -78,6 +85,7 @@ in
     buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
       glib-networking
       openssl
+      sqlite
       webkitgtk_4_1
       alsa-lib
       libopus

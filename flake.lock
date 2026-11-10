@@ -118,6 +118,54 @@
         "type": "github"
       }
     },
+    "oh-my-opencode-slim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793906691,
+        "narHash": "sha256-X7SLZCI9jJ8owTA4WQEzhfftRnTjTjzmOG2MyOu1QGY=",
+        "owner": "alvinunreal",
+        "repo": "oh-my-opencode-slim",
+        "rev": "9862fdee704d1d923b2691727441ece6736b5443",
+        "type": "github"
+      },
+      "original": {
+        "owner": "alvinunreal",
+        "repo": "oh-my-opencode-slim",
+        "type": "github"
+      }
+    },
+    "opencode-dynamic-context-pruning": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790306239,
+        "narHash": "sha256-gEA9RiQtz0cfLKy9h53st1bd5ea6K02lvo+Ti4R61pQ=",
+        "owner": "Opencode-DCP",
+        "repo": "opencode-dynamic-context-pruning",
+        "rev": "f8232fde1e63c2251687e4d9634bd53ce11568cb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Opencode-DCP",
+        "repo": "opencode-dynamic-context-pruning",
+        "type": "github"
+      }
+    },
+    "opencode-mem": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793819660,
+        "narHash": "sha256-+qDDWnWLfV/6BmXihrKHKX3UsB2bWGmHpZsr/ahbB5U=",
+        "owner": "tickernelz",
+        "repo": "opencode-mem",
+        "rev": "5b05e1f5ca783f161b5e61de4d2261966746e0d0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tickernelz",
+        "repo": "opencode-mem",
+        "type": "github"
+      }
+    },
     "pkgs-by-name": {
       "locked": {
         "lastModified": 1789628227,
@@ -143,6 +191,9 @@
         ],
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
+        "oh-my-opencode-slim": "oh-my-opencode-slim",
+        "opencode-dynamic-context-pruning": "opencode-dynamic-context-pruning",
+        "opencode-mem": "opencode-mem",
         "pkgs-by-name": "pkgs-by-name",
         "treefmt-nix": "treefmt-nix_2"
       }

@@ -4,7 +4,7 @@ when:
     branch: [main]
 engine: microvm
 image: nixos
-dependencies: [cachix, jq]
+dependencies: [cachix]
 substituters:
   https://nix-community.cachix.org: nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
   https://meflove.cachix.org: meflove.cachix.org-1:daXeLaZBNNJOngNUDEoylRfvtai2uSFOqdg29fN+7N8=
@@ -20,7 +20,30 @@ steps:
       cachix use nix-community
   - name: Build and push
     command: |-
-      for pkg in $(nix eval .#packages.x86_64-linux --apply 'pkgs: builtins.attrNames pkgs' --json | jq -r '.[] | select(. != "soundcloud-desktop")' | tr -d '[]"'); do
-        echo "building and pushing $pkg"
-        nix build -L --no-link --print-out-paths ".#legacyPackages.x86_64-linux.$pkg" | cachix push meflove || echo "WARN: failed $pkg, skipping"
-      done
+      bash .tangled/scripts/build-and-push.sh \
+        airpods-helper \
+        ani-cli-ru.api \
+        ani-cli-ru.client \
+        ani-cli-ru.uvicorn \
+        aw-notify-rs \
+        blanc \
+        blueferry \
+        blueferry-gtk \
+        blueferry-qt \
+        blueferry-quickshell \
+        clipse \
+        icloud-keychain.extension \
+        icloud-keychain.icp \
+        jj-hooks \
+        librepods-noctalia \
+        proton-linuwux \
+        purple \
+        tg-mtproto-cli \
+        yazi-plugins.cba-preview \
+        yazi-plugins.convert \
+        yazi-plugins.djvu-preview \
+        yazi-plugins.office \
+        yazi-plugins.piper \
+        yazi-plugins.torrent-preview \
+        yazi-plugins.wl-clipboard \
+        yot

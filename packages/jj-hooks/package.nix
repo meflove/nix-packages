@@ -14,7 +14,7 @@
   };
   src = lib.sources.cleanSource source;
 in
-  rustPlatform.buildRustPackage (finalAttrs: {
+  rustPlatform.buildRustPackage (_finalAttrs: {
     pname = "jj-hooks";
     inherit version src;
 

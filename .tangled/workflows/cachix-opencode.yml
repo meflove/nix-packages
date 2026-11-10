@@ -1,0 +1,28 @@
+---
+when:
+  - event: [push, pull_request]
+    branch: [main]
+    paths: [flake.nix, flake.lock, packages/opencodePlugins/**]
+  - event: manual
+engine: microvm
+image: nixos
+dependencies: [cachix]
+substituters:
+  https://nix-community.cachix.org: nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+  https://meflove.cachix.org: meflove.cachix.org-1:daXeLaZBNNJOngNUDEoylRfvtai2uSFOqdg29fN+7N8=
+steps:
+  - name: Configure nix
+    command: |
+      export NIX_CONFIG="experimental-features = nix-command flakes
+      access-tokens = github.com=$GH_TOKEN"
+  - name: Configure cachix
+    command: |
+      cachix authtoken "$CACHIX_AUTH_TOKEN"
+      cachix use meflove
+      cachix use nix-community
+  - name: Build and push
+    command: |-
+      bash .tangled/scripts/build-and-push.sh \
+        opencodePlugins.oh-my-opencode-slim \
+        opencodePlugins.opencode-dynamic-context-pruning \
+        opencodePlugins.opencode-mem

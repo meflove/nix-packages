@@ -39,9 +39,8 @@ $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86
 | `icloud-keychain.icp`                              | `icp` — unofficial iCloud Keychain client: CLI, `icp-host` native-messaging launcher and the browser extension    |
 | `icloud-keychain.extension`                        | The Apple Passwords browser extension as an unsigned `.xpi` for Firefox-family profiles                           |
 | `opencodePlugins.oh-my-opencode-slim`              | Multi-agent orchestration plugin for OpenCode                                                                     |
-| `opencodePlugins.opencode-mem`                     | Persistent memory for coding agents via local Turso/libSQL vector search¹                                         |
-| `opencodePlugins.opencode-notify`                  | Native OS notifications for OpenCode¹                                                                             |
-| `opencodePlugins.opencode-dynamic-context-pruning` | Prunes obsolete tool outputs from conversation context¹                                                           |
+| `opencodePlugins.opencode-mem`                     | Persistent memory for coding agents via local Turso/libSQL vector search                                          |
+| `opencodePlugins.opencode-dynamic-context-pruning` | Prunes obsolete tool outputs from conversation context                                                            |
 | `oo7`                                              | `oo7-cli` — Secret Service client (upstream `0.7.0.beta`)                                                         |
 | `oo7-pam`                                          | PAM module for the oo7 Secret Service (`0.7.0.beta`)                                                              |
 | `oo7-portal`                                       | XDG Desktop Portal for the oo7 Secret Service (`0.7.0.beta`)                                                      |
@@ -61,17 +60,17 @@ $ nix eval git+https://tangled.org/did:plc:jv6arfakxixeyppnbxhf6blz#packages.x86
 | `yot`                                              | Watch YouTube videos with AI translation in mpv                                                                   |
 | `updater`                                          | The bulk package-updater script (also the default package — see [Updating](#updating))                            |
 
-¹ These plugins still ship the OpenCode **V1** plugin API and do not load on OpenCode V2 (only load-failure warnings, nothing breaks). The Home Manager module options document this in detail.
+All three are packaged for the OpenCode **V2** plugin API. `oh-my-opencode-slim` builds only its V2 server and TUI entries (the V1 plugin, V1 TUI, CLI and marketplace contract are not built), and every package prunes dev-only dependencies from its output. `opencode-notify` was dropped: OpenCode V2 sends native notifications itself.
 
 ## Home Manager modules
 
-| Module                          | What it gives you                                                                                                                           |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `homeModules.blanc`             | `programs.blanc` — installs the browser, applies `commandLineArgs` and can register it as the default browser                               |
-| `homeModules.blueferry`         | `programs.blueferry` — installs the package and a hardened, D-Bus-activated `blueferry` systemd user service                                |
-| `homeModules.pipewire-soundpad` | `programs.pipewire-soundpad` — installs the package and a `pwsp-daemon` systemd user service                                                |
-| `homeModules.opencode-plugins`  | `programs.opencode.nixPlugins.*` — declaratively installs OpenCode plugins into `~/.config/opencode/plugins` and writes their JSON settings |
-| `homeModules.default`           | All of the above in one import                                                                                                              |
+| Module                          | What it gives you                                                                                                                                      |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `homeModules.blanc`             | `programs.blanc` — installs the browser, applies `commandLineArgs` and can register it as the default browser                                          |
+| `homeModules.blueferry`         | `programs.blueferry` — installs the package and a hardened, D-Bus-activated `blueferry` systemd user service                                           |
+| `homeModules.pipewire-soundpad` | `programs.pipewire-soundpad` — installs the package and a `pwsp-daemon` systemd user service                                                           |
+| `homeModules.opencode-plugins`  | `programs.opencode.nixPlugins.*` — links OpenCode V2 plugins into `~/.config/opencode/plugins` (V2 auto-discovers them) and writes their JSON settings |
+| `homeModules.default`           | All of the above in one import                                                                                                                         |
 
 Example:
 

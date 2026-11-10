@@ -10,10 +10,12 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "proton";
   version = "GE-Proton11-12-LinUwUx-Rework";
 
+  # Recent release tarballs wrap the tree in a ${version}/ directory, older ones did not.
+  # stripRoot lets fetchzip flatten the single wrapper directory either way.
   src = fetchzip {
     url = "https://codeberg.org/xshaduwulfx/proton-linuwux/releases/download/${finalAttrs.version}/${finalAttrs.version}.tar.gz";
-    stripRoot = false;
-    hash = "sha256-QrCYmvfAvL2LS99KQTggluVppWLleuoKKz1CAGU0Yz0=";
+    stripRoot = true;
+    hash = "sha256-5kP7sxIk+MPGyaMq2zpb6z1+XuLKv1vjn0xgfmFOdSY=";
   };
 
   dontUnpack = true;
@@ -25,10 +27,10 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     "steamcompattool"
   ];
 
-  # Upstream ships compatibilitytool.vdf with the internal name of an older
-  # release (11-8 still names 11-7), so its contents are not substituted.
-  # Generate the manifest instead: it is derived from steamDisplayName and
-  # stays stable across version bumps.
+  # Upstream has shipped compatibilitytool.vdf naming an older release before
+  # (11-8 still named 11-7), so its contents are not trusted. Generate the
+  # manifest instead: it is derived from steamDisplayName and stays stable
+  # across version bumps.
   compatibilityToolVdf = builtins.toFile "compatibilitytool.vdf" ''
     "compatibilitytools"
     {
@@ -51,7 +53,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     mkdir -p $out $steamcompattool
     ln -s $src/* $out
     ln -s $src/* $steamcompattool
-    rm $out/compatibilitytool.vdf $steamcompattool/compatibilitytool.vdf
+    rm -f $out/compatibilitytool.vdf $steamcompattool/compatibilitytool.vdf
     install -m 0644 ${finalAttrs.compatibilityToolVdf} $out/compatibilitytool.vdf
     install -m 0644 ${finalAttrs.compatibilityToolVdf} $steamcompattool/compatibilitytool.vdf
 

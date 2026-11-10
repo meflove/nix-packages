@@ -24,9 +24,9 @@ in
     # client's own identity (a Mac claim answers -80045). Upstream adopted that in a1342ca
     # (Sank6#24), so only the robustness part is left here: the GSA edge intermittently answers
     # an HTML 503 to the second SRP login `icp join` runs seconds after `icp login`, so a
-    # non-plist answer becomes a GSAEdgeError with one retry, the GSA keep-alive connection is
-    # never reused, the iCloud setup POSTs retry transient network failures, and the SMS 403
-    # (texted codes refused for anisette-server sign-ins) is explained. See Sank6#15.
+    # GSAServiceError (upstream's classification of a non-plist/5xx answer) gets one retry, the
+    # iCloud setup POSTs retry transient network failures, and the SMS 403 (texted codes refused
+    # for anisette-server sign-ins) is explained. See Sank6#15.
     patches = [./grandslam-windows-client-info.patch];
 
     pyproject = true;

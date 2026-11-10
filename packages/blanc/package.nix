@@ -3,7 +3,7 @@
   addDriverRunpath,
   buildNpmPackage,
   copyDesktopItems,
-  electron_44,
+  electron_45,
   fetchFromGitHub,
   libglvnd,
   makeDesktopItem,
@@ -15,11 +15,12 @@
   # which is what `programs.blanc.commandLineArgs` overrides.
   commandLineArgs ? "",
 }: let
-  electron = electron_44;
+  electron = electron_45;
 
-  # Upstream pins Electron exactly (src/main/ublock-platforms.json, 44.5.1) and
+  # Upstream pins Electron exactly (src/main/ublock-platforms.json) and
   # scripts/preflight-electron-runtime.js refuses to package unless the locked,
-  # installed and running versions all match. electron_44 is that version.
+  # installed and running versions all match. The npm lock currently pins
+  # 45.2.1, which is exactly the version electron_45 provides.
   electronVersion = electron.version;
 
   # Tracks main rather than a release tag, like the other branch-tracking
@@ -54,9 +55,9 @@ in
     npmRebuildFlags = ["--ignore-scripts"];
 
     env = {
-      # electron@44 ships no install script: index.js downloads the binary as soon
-      # as it is required. Point it at the Nix Electron 44.5.1 instead — the same
-      # directory electron-builder packs below.
+      # electron's npm package ships no install script: index.js downloads the
+      # binary as soon as it is required. Point it at the Nix Electron instead —
+      # the same directory electron-builder packs below.
       ELECTRON_OVERRIDE_DIST_PATH = "${electron.dist}";
       ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
