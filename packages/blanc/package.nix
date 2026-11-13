@@ -29,7 +29,7 @@
   src = fetchFromGitHub {
     owner = "bnfy";
     repo = "blanc";
-    rev = "66e89dc086def517656f3ba89ae1c161691e8fcb";
+    rev = "8a4e57e78dfe47a72c05d17fd6040be26c3dffd3";
     hash = "sha256-hIB0v2XXIcibhuTU8HZ3g1yG378NV+Y3R+z/49tbqko=";
   };
 
