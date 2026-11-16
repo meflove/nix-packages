@@ -30,7 +30,7 @@
     owner = "bnfy";
     repo = "blanc";
     rev = "8a4e57e78dfe47a72c05d17fd6040be26c3dffd3";
-    hash = "sha256-hIB0v2XXIcibhuTU8HZ3g1yG378NV+Y3R+z/49tbqko=";
+    hash = "sha256-6TQN5cNAyZS9GGSJXjl8iiVXlxcRvy2CHSZ5UIDXNUo=";
   };
 
   packageJson = builtins.fromJSON (builtins.readFile "${src.outPath}/package.json");

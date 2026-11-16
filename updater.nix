@@ -158,10 +158,10 @@
     includedNames;
   flakeInputBackedCount = builtins.length flakeInputBackedNames;
 
+  # Successful runs stay quiet; stderr is forwarded so callers can show it on failure.
   quietBunUpdate = pkgs.writeShellScriptBin "quiet-bun-update" ''
-    ${lib.getExe pkgs.bun2nix} "$@" > /dev/null 2>&1
-    exit_code=$?
-    exit $exit_code
+    ${lib.getExe pkgs.bun2nix} "$@" > /dev/null
+    exit $?
   '';
 
   npmDepsPackages =
@@ -189,10 +189,15 @@
       (lib.filter (lib.hasSuffix "package.nix") (lib.filesystem.listFilesRecursive ./packages))
     );
 
+  packageTimeoutSeconds = 900;
+  nixUpdateUnwrapped = "${lib.getExe pkgs.nix-update}";
+  nixUpdatePath = lib.makeBinPath [pkgs.nix-prefetch-git pkgs.nixpkgs-review];
+
+  # Successful runs stay quiet; stderr is forwarded so callers can show it on failure.
   quietNixUpdate = pkgs.writeShellScriptBin "quiet-nix-update" ''
-    ${lib.getExe pkgs.nix-update} "$@" > /dev/null 2>&1
-    exit_code=$?
-    exit $exit_code
+    export PATH="${nixUpdatePath}:$PATH"
+    ${nixUpdateUnwrapped} "$@" > /dev/null
+    exit $?
   '';
 in
   pkgs.writeShellScriptBin "update-packages"
@@ -204,12 +209,15 @@ in
     COMMANDS=()
     PACKAGE_NAMES=()
 
+    package_timeout=${toString packageTimeoutSeconds}
+
     for name in ${toString packagesToUpdate}; do
       nix_update_cmd="${lib.getExe quietNixUpdate}"
+      update_timeout="${lib.getExe' pkgs.coreutils "timeout"} --kill-after=30s ''${package_timeout}s"
       if [[ "$name" != "proton-linuwux" ]]; then
-        cmd="cd $PWD && $nix_update_cmd --flake legacyPackages.${pkgs.stdenv.system}.$name --version=branch"
+        cmd="cd $PWD && $update_timeout $nix_update_cmd --flake legacyPackages.${pkgs.stdenv.system}.$name --version=branch"
       else
-        cmd="cd $PWD && $nix_update_cmd --flake legacyPackages.${pkgs.stdenv.system}.$name"
+        cmd="cd $PWD && $update_timeout $nix_update_cmd --flake legacyPackages.${pkgs.stdenv.system}.$name"
       fi
 
       COMMANDS+=("$cmd")
@@ -275,13 +283,22 @@ in
 
       echo -n "[$current/$total] Updating $name..."
 
-      if eval "$cmd"; then
+      log=$(${pkgs.coreutils}/bin/mktemp)
+
+      if eval "$cmd" 2>"$log"; then
         echo " Success"
         success=$((success + 1))
       else
         echo " Failed"
+        if [[ -s "$log" ]]; then
+          ${pkgs.coreutils}/bin/tail -n 40 "$log" | ${pkgs.gnused}/bin/sed 's/^/    /'
+        else
+          echo "    (no stderr output)"
+        fi
         failed=$((failed + 1))
       fi
+
+      ${pkgs.coreutils}/bin/rm -f "$log"
     done
 
     bun_total=''${#BUN_DIRS[@]}
@@ -308,7 +325,9 @@ in
           continue
         fi
 
-        if (cd "$dir" && ${lib.getExe quietBunUpdate} -l "$lock" -o "$out"); then
+        log=$(${pkgs.coreutils}/bin/mktemp)
+
+        if (cd "$dir" && ${lib.getExe quietBunUpdate} -l "$lock" -o "$out") 2>"$log"; then
           if ${lib.getExe pkgs.nix} fmt -- "$dir/$out" >/dev/null 2>&1; then
             echo " Success"
           else
@@ -317,8 +336,15 @@ in
           bun_success=$((bun_success + 1))
         else
           echo " Failed (bun2nix)"
+          if [[ -s "$log" ]]; then
+            ${pkgs.coreutils}/bin/tail -n 20 "$log" | ${pkgs.gnused}/bin/sed 's/^/    /'
+          else
+            echo "    (no stderr output)"
+          fi
           bun_failed=$((bun_failed + 1))
         fi
+
+        ${pkgs.coreutils}/bin/rm -f "$log"
       done
     fi
 
@@ -346,8 +372,16 @@ in
           continue
         fi
 
-        if ! new_hash=$(${lib.getExe pkgs.prefetch-npm-deps} "$lock" 2>/dev/null) || [[ -z "$new_hash" ]]; then
+        log=$(${pkgs.coreutils}/bin/mktemp)
+
+        if ! new_hash=$(${lib.getExe pkgs.prefetch-npm-deps} "$lock" 2>"$log") || [[ -z "$new_hash" ]]; then
           echo " Failed (prefetch-npm-deps)"
+          if [[ -s "$log" ]]; then
+            ${pkgs.coreutils}/bin/tail -n 20 "$log" | ${pkgs.gnused}/bin/sed 's/^/    /'
+          else
+            echo "    (no stderr output)"
+          fi
+          ${pkgs.coreutils}/bin/rm -f "$log"
           npm_failed=$((npm_failed + 1))
           continue
         fi
@@ -364,6 +398,8 @@ in
           echo " Failed (rewrite)"
           npm_failed=$((npm_failed + 1))
         fi
+
+        ${pkgs.coreutils}/bin/rm -f "$log"
       done
     fi
 
