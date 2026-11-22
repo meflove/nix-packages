@@ -11,7 +11,7 @@ in
 
     inherit src;
 
-    npmDepsHash = "sha256-ucNE3Le/nr85P33X9FDx8WlWbwGgB9H3/VMPuBuuk9Q=";
+    npmDepsHash = "sha256-fI4ZYVUkQSVjQf0B9figifiL2pJLwS4T3lcbVCaaMLU=";
 
     # @effect/platform-node declares `redis` as a peer without pinning it in the
     # lockfile, so npm tries to resolve it from the registry even offline and

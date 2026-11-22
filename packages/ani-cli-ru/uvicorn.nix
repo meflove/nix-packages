@@ -8,7 +8,7 @@
   src = fetchFromGitHub {
     owner = "Kludex";
     repo = "uvicorn";
-    rev = "a99c1b76ee9caea67ff98e2ccc457bd372db193f";
+    rev = "1b16995ffef17e7914a261f3ed69f8b9e7c57269";
     hash = "sha256-rnjp0cuMJ6N+z1zh9PDXR7bU83FuRKPhCSyIXtvmODs=";
   };
 
