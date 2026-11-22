@@ -9,8 +9,8 @@
   src = fetchFromGitHub {
     owner = "Sank6";
     repo = "iCloud-Keychain-for-Linux";
-    rev = "412766faef0776ed745ce749bca2d36e448ceb19";
-    hash = "sha256-j/66P9V/tQHWVr09l6gYs6zMdlarXBawDzei6lQVUzc=";
+    rev = "1235cc1f4257acefdd53e91846bec67995c9cce4";
+    hash = "sha256-VzkbaOToarcYqmwCNfdEOKICBbsI2aw1kq700asMzkI=";
   };
 
   pyproject = lib.importTOML "${src.outPath}/pyproject.toml";

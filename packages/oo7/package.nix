@@ -10,8 +10,8 @@
   src = fetchFromGitHub {
     owner = "linux-credentials";
     repo = "oo7";
-    rev = "9b950d1a0625e2675736f0e15fc2a19a8862881b";
-    hash = "sha256-aa79c5jMUo+VlQ88Z3chgetmPk56+wQ9F/hn3PZXMuU=";
+    rev = "74c4d5446ce3ad4d669caff8054937a732cc2111";
+    hash = "sha256-xEdok1rndEhcRBm7c5PCbXswpV/IGfNHsnWY9SXy+Ws=";
   };
 in
   rustPlatform.buildRustPackage {

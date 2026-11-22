@@ -9,7 +9,7 @@
     owner = "Kludex";
     repo = "uvicorn";
     rev = "1b16995ffef17e7914a261f3ed69f8b9e7c57269";
-    hash = "sha256-rnjp0cuMJ6N+z1zh9PDXR7bU83FuRKPhCSyIXtvmODs=";
+    hash = "sha256-3dRnIQ/XdFC50TUQSWkNJOkDzYeFPZGdOM093wBB4cg=";
   };
 
   # uvicorn's version is dynamic in pyproject (tool.hatch.version.path)
