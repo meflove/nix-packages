@@ -190,13 +190,11 @@
     );
 
   packageTimeoutSeconds = 900;
-  nixUpdateUnwrapped = "${lib.getExe pkgs.nix-update}";
-  nixUpdatePath = lib.makeBinPath [pkgs.nix-prefetch-git pkgs.nixpkgs-review];
+  nix-update = inputs.nix-update.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   # Successful runs stay quiet; stderr is forwarded so callers can show it on failure.
   quietNixUpdate = pkgs.writeShellScriptBin "quiet-nix-update" ''
-    export PATH="${nixUpdatePath}:$PATH"
-    ${nixUpdateUnwrapped} "$@" > /dev/null
+    ${lib.getExe nix-update} "$@" > /dev/null
     exit $?
   '';
 in

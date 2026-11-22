@@ -25,6 +25,13 @@
       ref = "nixos-unstable";
     };
 
+    nix-update = {
+      type = "github";
+      owner = "Mic92";
+      repo = "nix-update";
+      ref = "main";
+    };
+
     pkgs-by-name = {
       type = "github";
       owner = "drupol";

@@ -79,6 +79,41 @@
         "type": "github"
       }
     },
+    "nix-update": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1795354221,
+        "narHash": "sha256-TCOhUWb53V3nrJRD3JuADly1U9fNi0Z79QMcjhbefHg=",
+        "owner": "Mic92",
+        "repo": "nix-update",
+        "rev": "cfd5a600f21407748daa7b38cd5e370d868ce10e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "ref": "main",
+        "repo": "nix-update",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1794840529,
+        "narHash": "sha256-ySrWnmZB5UsZTYGHHnBjllT05O5iFjElCRS+mabtfP0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e21fec321d73511849707a7585e4ea155ee4bf40",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1795234589,
@@ -186,6 +221,7 @@
         "bun2nix": "bun2nix",
         "flake-parts": "flake-parts_2",
         "import-tree": "import-tree",
+        "nix-update": "nix-update",
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
