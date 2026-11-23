@@ -31,7 +31,7 @@ in
     # The client and model crates are consumed from a git branch, so the
     # registry-only `cargoLock` path cannot be used; the vendored-deps hash
     # covers them (fetchCargoVendor vendors git sources from Cargo.lock).
-    cargoHash = "sha256-Mep7ppAQ/nCwHKSsokjY7HKFwDtakmqK8oFoM6HtTT0=";
+    cargoHash = "sha256-3HgzU+dEEN/bWF2qfQe8DuXSHX/dSPmlvMRxFDoumRg=";
 
     doCheck = false;
 

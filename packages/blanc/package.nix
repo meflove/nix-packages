@@ -47,7 +47,7 @@ in
     # Upstream builds with Node 22 (.github/workflows/release-windows-linux.yml).
     nodejs = nodejs_22;
 
-    npmDepsHash = "sha256-lT5wy+9NQRRLQY3EVkIKkm3MCH2GUy2zITatF1dkjSw=";
+    npmDepsHash = "sha256-7/8eAschHyuR44ZWGLlfdeFH6gej7AEssEkT10r5bgA=";
 
     # `npm rebuild` would otherwise run the install scripts of dependencies; the
     # only ones in the lock file are the root `postinstall` (reproduced below from
