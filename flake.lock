@@ -140,11 +140,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795391572,
-        "narHash": "sha256-tcc1zSc7dF4M0X9aoLEXT7AUUosCeJNyPrTAYJUKQjM=",
+        "lastModified": 1795477561,
+        "narHash": "sha256-5oQ1Dzv0vElMFLeQup9qn+FniBU1CdlQFwsFF6W+hjA=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "e570da0bda1e67511d43f39fc2c5a3589f942f4b",
+        "rev": "ac963afde76bdf74dd5c370ed668bf352713d4e7",
         "type": "github"
       },
       "original": {
@@ -156,11 +156,11 @@
     "oh-my-opencode-slim": {
       "flake": false,
       "locked": {
-        "lastModified": 1795350682,
-        "narHash": "sha256-jhkSmVkYSYK+4LnuxS6ceDWutQs9mDJh1UqHM4E86Wo=",
+        "lastModified": 1795420930,
+        "narHash": "sha256-u2vIBq5iujGx7D8JNuh2xWHEo9hA1GuTkDDqD3FD8R8=",
         "owner": "alvinunreal",
         "repo": "oh-my-opencode-slim",
-        "rev": "c8d937b34f529b66abe2df20c1c6edb67070eea8",
+        "rev": "39e783d07509607fe7f79a62a90b73e8b2edb754",
         "type": "github"
       },
       "original": {
