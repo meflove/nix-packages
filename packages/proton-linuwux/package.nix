@@ -8,14 +8,14 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "proton";
-  version = "GE-Proton11-12-LinUwUx-Rework";
+  version = "GE-Proton11-14-LinUwUx-Rework";
 
   # Recent release tarballs wrap the tree in a ${version}/ directory, older ones did not.
   # stripRoot lets fetchzip flatten the single wrapper directory either way.
   src = fetchzip {
     url = "https://codeberg.org/xshaduwulfx/proton-linuwux/releases/download/${finalAttrs.version}/${finalAttrs.version}.tar.gz";
     stripRoot = true;
-    hash = "sha256-5kP7sxIk+MPGyaMq2zpb6z1+XuLKv1vjn0xgfmFOdSY=";
+    hash = "sha256-bZ/SAGBRXTMgbxf+fdv42ICjnzxU+WtP8N0ibY74cMg=";
   };
 
   dontUnpack = true;

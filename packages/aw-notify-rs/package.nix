@@ -10,8 +10,8 @@
   src = fetchFromGitHub {
     owner = "ActivityWatch";
     repo = "aw-notify-rs";
-    rev = "93142f6e08c312c342492417d15f1aea0cd689af";
-    hash = "sha256-ARXfFRajQGZsiHTfvMfeE6adsHlLrMcECz5tXLCh5ik=";
+    rev = "ba31a7da6a5973fc252d4fcf9acf368d64aeae8f";
+    hash = "sha256-0p1d6QJ71rmwzkzpf6argoPpNDFh7y1QAwbG9wvm0v8=";
   };
 
   cargoToml = lib.importTOML "${src.outPath}/Cargo.toml";
